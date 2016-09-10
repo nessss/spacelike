@@ -16,6 +16,14 @@ char Player::repr(){
     return m_repr;
 }
 
+bool Player::visible(){
+    return true;
+}
+
+bool Player::known(){
+    return true;
+}
+
 int Player::x(){
     return m_x;
 }

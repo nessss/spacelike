@@ -6,15 +6,16 @@
 #define __PLAYER_H_INCLUDED__
 
 #include <ncurses.h>
-#include "actor.h"
+#include "onscreen_element.h"
 
-class Player : Actor{
+class Player : OnscreenElement{
     public:
         Player();
         Player(int, int);
 
         char repr();
-
+        bool visible();
+        bool known();
         int x();
         int y();
 

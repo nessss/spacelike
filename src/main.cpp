@@ -1,14 +1,25 @@
 #include <stdlib.h>
 #include <curses.h>
 #include <signal.h>
+#include <list>
 
 #include "main.h"
 #include "player.h"
+#include "floor_tile.h"
 
 int main(int argc, char *argv[]){
     int num = 0;
 
     Player player;
+    int rows = 20;
+    int cols = 20;
+    std::list<FloorTile> floorTiles;
+
+    for(int x = 0; x < cols; x++){
+        for(int y = 0; y < rows; y++){
+            floorTiles.emplace_front(x, y);
+        }
+    }
 
     signal(SIGINT, finish);  /* arrange interrupts to terminate */
 
@@ -37,6 +48,13 @@ int main(int argc, char *argv[]){
         init_pair(7, COLOR_WHITE,   COLOR_BLACK);
     }
 
+    for(std::list<FloorTile>::iterator it=floorTiles.begin(); it != floorTiles.end(); ++it){
+        mvaddch(
+                it->y(),
+                it->x(),
+                it->repr());
+    }
+
     move(player.y(), player.x());
     addch(player.repr());
     move(player.y(), player.x());
@@ -44,7 +62,13 @@ int main(int argc, char *argv[]){
     for(;;){
         int c = getch();
 
-        mvaddch(player.y(), player.x(), ' ');
+        for(std::list<FloorTile>::iterator it=floorTiles.begin(); it != floorTiles.end(); ++it){
+            mvaddch(
+                    it->y(),
+                    it->x(),
+                    it->repr());
+        }
+
         player.process_input(c);
         player.refresh();
     }
