@@ -1,25 +1,35 @@
 #include <stdlib.h>
 #include <curses.h>
 #include <signal.h>
+#include <assert.h>
 #include <list>
+#include <iostream>
 
 #include "main.h"
+#include "input.h"
+#include "output.h"
 #include "player.h"
 #include "floor_tile.h"
 
 int main(int argc, char *argv[]){
-    int num = 0;
+
+    int rows = 20;
+    int cols = 40;
 
     Player player;
-    int rows = 20;
-    int cols = 20;
+    Input input;
+    Output output(cols, rows);
     std::list<FloorTile> floorTiles;
 
     for(int x = 0; x < cols; x++){
         for(int y = 0; y < rows; y++){
             floorTiles.emplace_front(x, y);
+            output.addElement(&(floorTiles.front()));
         }
     }
+
+    input.setFocusedActor(&player);
+    output.addElement(&player);
 
     signal(SIGINT, finish);  /* arrange interrupts to terminate */
 
@@ -28,7 +38,7 @@ int main(int argc, char *argv[]){
     nonl();                  /* tell curses not to do NL->CR/NL on output */
     cbreak();                /* take input chars one at a time, no wait for \n */
     noecho();                /* do not echo input */
-    curs_set(0);             /* invisible cursor */
+    //curs_set(0);             /* invisible cursor */
 
     if(has_colors()){
         start_color();
@@ -48,29 +58,13 @@ int main(int argc, char *argv[]){
         init_pair(7, COLOR_WHITE,   COLOR_BLACK);
     }
 
-    for(std::list<FloorTile>::iterator it=floorTiles.begin(); it != floorTiles.end(); ++it){
-        mvaddch(
-                it->y(),
-                it->x(),
-                it->repr());
-    }
-
-    move(player.y(), player.x());
-    addch(player.repr());
-    move(player.y(), player.x());
+    output.refresh();
 
     for(;;){
         int c = getch();
+        input.processInput(c);
 
-        for(std::list<FloorTile>::iterator it=floorTiles.begin(); it != floorTiles.end(); ++it){
-            mvaddch(
-                    it->y(),
-                    it->x(),
-                    it->repr());
-        }
-
-        player.process_input(c);
-        player.refresh();
+        output.refresh();
     }
 
     finish(0);

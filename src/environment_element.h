@@ -7,7 +7,7 @@
 
 #include "onscreen_element.h"
 
-class EnvironmentElement : OnscreenElement{
+class EnvironmentElement : public OnscreenElement{
     public:
         virtual bool blocksMovement() = 0;
 };

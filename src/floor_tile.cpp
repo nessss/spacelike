@@ -1,19 +1,17 @@
 #include "floor_tile.h"
 
 FloorTile::FloorTile(int x, int y){
-    m_repr = '#';
+    m_symbol = '#';
     m_x = x;
     m_y = y;
+    m_depth = 100;
 }
 
-FloorTile::FloorTile(int x, int y, char repr){
-    m_repr = repr;
+FloorTile::FloorTile(int x, int y, char symbol){
+    m_symbol = symbol;
     m_x = x;
     m_y = y;
-}
-
-char FloorTile::repr(){
-    return m_repr;
+    m_depth = 100;
 }
 
 bool FloorTile::visible(){
@@ -28,12 +26,4 @@ bool FloorTile::known(){
 
 bool FloorTile::blocksMovement(){
     return false;
-}
-
-int FloorTile::x(){
-    return m_x;
-}
-
-int FloorTile::y(){
-    return m_y;
 }

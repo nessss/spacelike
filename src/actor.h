@@ -7,9 +7,7 @@
 
 class Actor{
     public:
-        virtual char repr() = 0; /* on-screen representation */
-        virtual int x() = 0;     /* world-space location */ 
-        virtual int y() = 0;
+        virtual int move(int, int) = 0;
 };
 
 #endif

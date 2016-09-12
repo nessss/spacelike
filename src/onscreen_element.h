@@ -1,17 +1,27 @@
-/* Abstract base class for elements that can be
- * printed to the screen.
+/* Abstract base class for elements that can be printed to the screen.
  */
 
-#ifndef __ONSCREEN_ELEMENT_H_ADDED__
-#define __ONSCREEN_ELEMENT_H_ADDED__
+#ifndef ONSCREEN_ELEMENT_H
+#define ONSCREEN_ELEMENT_H
+
+#include "guid.h"
 
 class OnscreenElement{
     public:
-        virtual char repr() = 0;   /* on-screen representation */
-        virtual bool visible() = 0; /* currently visible? */
-        virtual bool known() = 0;
-        virtual int x() = 0;
-        virtual int y() = 0;
+        virtual bool visible() = 0;         /* currently visible?       */
+        virtual bool known() = 0;           /* location known?          */
+
+        Guid guid();
+        char symbol(){ return m_symbol; }   /* on-screen representation */
+        int x(){ return m_x; }              /* location in world-space */
+        int y(){ return m_y; }
+        int depth(){ return m_depth; }      /* draw order */
+
+    protected:
+        Guid m_guid;
+        char m_symbol;
+        int m_x, m_y;
+        int m_depth;
 };
 
-#endif
+#endif /* ONSCREEN_ELEMENT_H */
