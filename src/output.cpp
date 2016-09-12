@@ -5,11 +5,12 @@ Output::Output(int w, int h, int offset){
     m_w = w;
     m_h = h;
     m_offset = offset;
+    lastScreen = std::vector<char>(m_w * m_h, ' ');
 }
 
 void Output::refresh(){
     std::vector<int> depths(m_w * m_h, INT_MAX);
-    std::vector<char> screen(m_w * m_h, ' ');
+    std::vector<char> screen(lastScreen);
 
     /* find lowest depth values (i.e. highest objects) */
     for(auto entry = elements.begin(); entry != elements.end(); ++entry){
@@ -25,8 +26,11 @@ void Output::refresh(){
 
     int cursor_y, cursor_x;
     getyx(stdscr, cursor_y, cursor_x);
-    for(int y = 0; y < m_h; ++y){
-        mvaddnstr(y + m_offset, m_offset, screen.data() + (m_w * y), m_w);
+    for(int i = 0; i < screen.size(); ++i){
+        if(screen[i] != lastScreen[i]){
+            mvaddch(i/m_w + m_offset, i%m_w + m_offset, screen[i]);
+            lastScreen[i] = screen[i];
+        }
     }
     move(cursor_y, cursor_x);
 }

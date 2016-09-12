@@ -30,5 +30,6 @@ class Output{
   private:
     int m_w, m_h; /* width and height */
     int m_offset; /* # of chars from edge of screen */
+    std::vector<char> lastScreen;
     ElementMap elements;
 };
