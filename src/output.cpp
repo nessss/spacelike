@@ -17,6 +17,8 @@ void Output::refresh(){
     for(auto entry = elements.begin(); entry != elements.end(); ++entry){
         OnscreenElement *element = entry->second;
         int idx = (element->y() * m_w) + element->x();
+        if(element->x() < 0 || element->x() > m_w) continue;
+        if(element->y() < 0 || element->y() > m_h) continue;
         if(element->depth() <= depths[idx]){
             depths[idx] = element->depth();
             screen[idx] = element->symbol();
