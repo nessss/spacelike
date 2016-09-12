@@ -31,6 +31,14 @@ void Output::refresh(){
     move(cursor_y, cursor_x);
 }
 
+void getCursorPosition(int &x, int &y){
+    getyx(stdscr, y, x);
+}
+
+void setCursonPosition(int x, int y){
+    move(y, x);
+}
+
 void Output::addElement(OnscreenElement *element){
     elements[element->guid()] = element;
 }
