@@ -2,7 +2,7 @@
  * Renders registered OnscreenElements, considering relative
  * depth. All curses output functions should be confined to
  * this class, allowing the rest of the program to use the
- * otherwis convetional (x, y) coordinate system rather than
+ * otherwise conventional (x, y) coordinate system rather than
  * curses' (y, x) system.
  */
 
