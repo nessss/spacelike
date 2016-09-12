@@ -69,25 +69,33 @@ void Output::refreshGameWindow(){
 
     /* draw elements */
 
-    refresh();
-    int cursor_y, cursor_x;
-    getyx(stdscr, cursor_y, cursor_x);
+    int cursor_y, cursor_x; /* save cursor position */
+    getyx(m_gameWindow, cursor_y, cursor_x);
     for(int i = 0; i < screen.size(); ++i){
         if(screen[i] != lastScreen[i]){
-            mvwaddch(gameWindow, i/m_w, i%m_w, screen[i]);
+            mvwaddch(m_gameWindow, i/m_w, i%m_w, screen[i]);
             lastScreen[i] = screen[i];
         }
     }
-    wrefresh(gameWindow);
-    move(cursor_y, cursor_x);
+    wmove(m_gameWindow, cursor_y, cursor_x); /* reset cursor */
+    refresh();
+    wrefresh(m_gameWindow);
 }
 
-void getCursorPosition(int &x, int &y){
+void Output::getCursorPosition(int &x, int &y){
     getyx(stdscr, y, x);
 }
 
-void setCursonPosition(int x, int y){
+void Output::setCursorPosition(int x, int y){
     move(y, x);
+}
+
+void Output::getGameWindowCursorPosition(int &x, int &y){
+    getyx(m_gameWindow, y, x);
+}
+
+void Output::setGameWindowCursorPosition(int x, int y){
+    wmove(m_gameWindow, y, x);
 }
 
 void Output::addElement(OnscreenElement *element){
