@@ -1,5 +1,6 @@
 #include "output.h"
 #include <iostream>
+#include <limits.h>
 
 Output::Output(int w, int h, int offset){
     m_w = w;
