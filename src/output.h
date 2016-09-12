@@ -25,7 +25,8 @@ class Output{
     void setCursonPosition(int x, int y);
 
     void refresh();
-    void addElement(OnscreenElement*);
+    void addElement(OnscreenElement *element);
+    void removeElement(Guid guid);
 
   private:
     int m_w, m_h; /* width and height */

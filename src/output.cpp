@@ -46,3 +46,7 @@ void setCursonPosition(int x, int y){
 void Output::addElement(OnscreenElement *element){
     elements[element->guid()] = element;
 }
+
+void Output::removeElement(Guid guid){
+    elements.erase(guid);
+}
