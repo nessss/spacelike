@@ -8,7 +8,7 @@
 #include "onscreen_element.h"
 #include "actor.h"
 
-class Player : public OnscreenElement, public Actor {
+class Player : public Actor {
     public:
         Player();
         Player(int, int);

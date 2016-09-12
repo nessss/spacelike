@@ -5,7 +5,9 @@
 #ifndef __ACTOR_H_INCLUDED__
 #define __ACTOR_H_INCLUDED__
 
-class Actor{
+#include "onscreen_element.h"
+
+class Actor : public OnscreenElement{
     public:
         virtual int move(int, int) = 0;
 };
