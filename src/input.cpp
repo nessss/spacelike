@@ -1,7 +1,5 @@
 #include "input.h"
 
-Input::Input(){}
-
 void Input::processInput(){
     char c = (char)getch();
     if(m_focusedActor == 0) return;

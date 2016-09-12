@@ -6,7 +6,6 @@
 
 class Input{
     public:
-        Input();
         void processInput();
 
         Actor* focusedActor(){ return m_focusedActor; }
