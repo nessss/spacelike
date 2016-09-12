@@ -6,6 +6,9 @@
  * curses' (y, x) system.
  */
 
+#ifndef OUTPUT_H
+#define OUTPUT_H 
+
 #include "onscreen_element.h"
 #include "guid.h"
 #include <curses.h>
@@ -15,29 +18,40 @@
 typedef std::unordered_map<Guid, OnscreenElement*> ElementMap;
 
 class Output{
-  public:
-    Output(int w, int h, int offset = 3);
+    public:
+        static Output& getInstance();
 
-    int w(){ return m_w; }
-    int w(int w){ m_w = w; return m_w; }
+        void init(int w, int h, int offset);
 
-    int h(){ return m_h; }
-    int h(int h){ m_h = h; return m_h; }
+        int w(){ return m_w; }
+        int w(int w){ m_w = w; return m_w; }
 
-    int offset(){ return m_offset; }
-    int offset(int o){ m_offset = o; return m_offset; }
+        int h(){ return m_h; }
+        int h(int h){ m_h = h; return m_h; }
 
-    void getCursorPosition(int &x, int &y);
-    void setCursonPosition(int x, int y);
+        int offset(){ return m_offset; }
+        int offset(int o){ m_offset = o; return m_offset; }
 
-    void refreshGameWindow();
-    void addElement(OnscreenElement *element);
-    void removeElement(OnscreenElement *element);
+        void getCursorPosition(int &x, int &y);
+        void setCursorPosition(int x, int y);
 
-  private:
-    WINDOW *gameWindow;
-    int m_w, m_h; /* width and height */
-    int m_offset; /* # of chars from edge of screen */
-    std::vector<char> lastScreen;
-    ElementMap elements;
+        void getGameWindowCursorPosition(int &x, int &y);
+        void setGameWindowCursorPosition(int x, int y);
+
+        void refreshGameWindow();
+        void addElement(OnscreenElement *element);
+        void removeElement(OnscreenElement *element);
+
+    private:
+        Output();
+        Output(Output&);
+        void operator=(Output const&);
+
+        WINDOW *m_gameWindow;
+        int m_w, m_h; /* width and height */
+        int m_offset; /* # of chars from edge of screen */
+        std::vector<char> lastScreen;
+        ElementMap elements;
 };
+
+#endif /* ifndef OUTPUT_H */

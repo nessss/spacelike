@@ -16,10 +16,12 @@ int main(int argc, char *argv[]){
 
     int rows = 20;
     int cols = 40;
+    int gameWindowOffset = 3;
 
     Player player;
     Input input;
-    Output output(cols, rows);
+    Output &output = Output::getInstance();
+    output.init(cols, rows, gameWindowOffset);
     std::list<FloorTile> floorTiles;
 
     for(int x = 0; x < cols; x++){

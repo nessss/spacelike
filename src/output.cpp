@@ -4,12 +4,7 @@
 #include <limits.h>
 #include <cassert>
 
-Output::Output(int w, int h, int offset){
-    m_w = w;
-    m_h = h;
-    m_offset = offset;
-    lastScreen = std::vector<char>(m_w * m_h, ' ');
-
+Output::Output(){
     /* init curses */
     signal(SIGINT, Application::finish);  /* arrange interrupts to terminate */
 
@@ -38,8 +33,20 @@ Output::Output(int w, int h, int offset){
         init_pair(7, COLOR_WHITE,   COLOR_BLACK);
     }
 
-    gameWindow = newwin(m_h, m_w, m_offset, m_offset);
-    assert(gameWindow != NULL);
+}
+
+void Output::init(int w, int h, int offset){
+    m_w = w;
+    m_h = h;
+    m_offset = offset;
+    lastScreen = std::vector<char>(m_w * m_h, ' ');
+    m_gameWindow = newwin(m_h, m_w, m_offset, m_offset);
+    assert(m_gameWindow != NULL);
+}
+
+Output& Output::getInstance(){
+    static Output instance;
+    return instance;
 }
 
 void Output::refreshGameWindow(){
