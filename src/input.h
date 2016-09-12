@@ -1,10 +1,11 @@
 /* Input handling. */
 
 #include "actor.h"
+#include <curses.h>
 
 class Input{
   public:
-    void processInput(int);
+    void processInput();
 
     Actor* focusedActor(){ return m_focusedActor; }
     void setFocusedActor(Actor *actor){ m_focusedActor = actor; }

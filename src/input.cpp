@@ -1,8 +1,9 @@
 #include "input.h"
 
-void Input::processInput(int c){
+void Input::processInput(){
+    char c = (char)getch();
     if(m_focusedActor == 0) return;
-    switch((char)c){
+    switch(c){
         case 'h':
             m_focusedActor->move(-1, 0);
             break;

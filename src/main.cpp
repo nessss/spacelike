@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "main.h"
+#include "application.h"
 #include "input.h"
 #include "output.h"
 #include "player.h"
@@ -31,49 +32,15 @@ int main(int argc, char *argv[]){
     input.setFocusedActor(&player);
     output.addElement(&player);
 
-    signal(SIGINT, finish);  /* arrange interrupts to terminate */
 
-    initscr();               /* initialize curses library */
-    keypad(stdscr, TRUE);           /* enable keyboard mapping */
-    nonl();                  /* tell curses not to do NL->CR/NL on output */
-    cbreak();                /* take input chars one at a time, no wait for \n */
-    noecho();                /* do not echo input */
-    //curs_set(0);             /* invisible cursor */
+    output.refreshGameWindow();
 
-    if(has_colors()){
-        start_color();
+    while(true){
+        input.processInput();
 
-        /*
-         * Simple color assignment, often all we need. Color pair 0 cannot
-         * be redefined. This example uses the same value for the color
-         * pair as for the foreground color, though of course that is not
-         * necessary:
-         */
-        init_pair(1, COLOR_RED,     COLOR_BLACK);
-        init_pair(2, COLOR_GREEN,   COLOR_BLACK);
-        init_pair(3, COLOR_YELLOW,  COLOR_BLACK);
-        init_pair(4, COLOR_BLUE,    COLOR_BLACK);
-        init_pair(5, COLOR_CYAN,    COLOR_BLACK);
-        init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-        init_pair(7, COLOR_WHITE,   COLOR_BLACK);
+        output.refreshGameWindow();
     }
 
-    output.refresh();
-
-    for(;;){
-        int c = getch();
-        input.processInput(c);
-
-        output.refresh();
-    }
-
-    finish(0);
+    Application::finish(0);
 }
 
-static void finish(int sig){
-    endwin();
-
-    /* do your non-curses wrapup here */
-
-    exit(0);
-}

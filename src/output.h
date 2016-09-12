@@ -30,11 +30,12 @@ class Output{
     void getCursorPosition(int &x, int &y);
     void setCursonPosition(int x, int y);
 
-    void refresh();
+    void refreshGameWindow();
     void addElement(OnscreenElement *element);
     void removeElement(OnscreenElement *element);
 
   private:
+    WINDOW *gameWindow;
     int m_w, m_h; /* width and height */
     int m_offset; /* # of chars from edge of screen */
     std::vector<char> lastScreen;
