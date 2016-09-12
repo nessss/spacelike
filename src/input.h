@@ -1,5 +1,8 @@
 /* Input handling. */
 
+#ifndef INPUT_H
+#define INPUT_H 
+
 #include <curses.h>
 #include "actor.h"
 #include "output.h"
@@ -15,3 +18,5 @@ class Input{
         Actor *m_focusedActor;
         Output &m_output = Output::getInstance();
 };
+
+#endif /* ifndef INPUT_H */
