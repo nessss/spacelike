@@ -32,7 +32,7 @@ class Output{
 
     void refresh();
     void addElement(OnscreenElement *element);
-    void removeElement(Guid guid);
+    void removeElement(OnscreenElement *element);
 
   private:
     int m_w, m_h; /* width and height */
