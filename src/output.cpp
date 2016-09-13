@@ -55,7 +55,7 @@ void Output::refreshGameWindow(){
 
     /* find lowest depth values (i.e. highest objects) */
     for(auto entry = elements.begin(); entry != elements.end(); ++entry){
-        OnscreenElement *element = entry->second;
+        OnscreenElement *element = *entry;
         // skip out-of-range elements
         if(element->x() < 0 || element->x() > m_w) continue;
         if(element->y() < 0 || element->y() > m_h) continue;
@@ -98,10 +98,10 @@ void Output::setGameWindowCursorPosition(int x, int y){
     wmove(m_gameWindow, y, x);
 }
 
-void Output::addElement(OnscreenElement *element){
-    elements[element->guid()] = element;
+void Output::addElement(OnscreenElement* element){
+    elements.insert(element);
 }
 
 void Output::removeElement(OnscreenElement *element){
-    elements.erase(element->guid());
+    elements.erase(element);
 }

@@ -12,10 +12,10 @@
 #include "onscreen_element.h"
 #include "guid.h"
 #include <curses.h>
-#include <unordered_map>
+#include <set>
 #include <vector>
 
-typedef std::unordered_map<Guid, OnscreenElement*> ElementMap;
+typedef std::set<OnscreenElement*, OnscreenElementPtrComp> ElementSet;
 
 class Output{
     public:
@@ -51,7 +51,7 @@ class Output{
         int m_w, m_h; /* width and height */
         int m_offset; /* # of chars from edge of screen */
         std::vector<char> lastScreen;
-        ElementMap elements;
+        ElementSet elements;
 };
 
 #endif /* ifndef OUTPUT_H */
