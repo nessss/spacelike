@@ -14,11 +14,11 @@ class OnscreenElement{
         virtual bool known() = 0;           /* location known?          */
         virtual bool move(int, int) = 0;
 
-        const std::size_t& guid() const { return m_guid; }
-        char symbol(){ return m_symbol; }   /* on-screen representation */
-        int x(){ return m_x; }              /* location in world-space */
-        int y(){ return m_y; }
-        int depth(){ return m_depth; }      /* draw order */
+        std::size_t guid() const { return m_guid; }
+        char symbol() const { return m_symbol; }   /* on-screen representation */
+        int x() const { return m_x; }              /* location in world-space */
+        int y() const { return m_y; }
+        int depth() const { return m_depth; }      /* draw order */
 
 
 
@@ -46,7 +46,13 @@ inline bool operator!=(
         const OnscreenElement& lhs,
         const OnscreenElement& rhs);
 
-struct OnscreenElementPtrComp{
+struct OnscreenElementPtrGuidComp{
+    bool operator()(
+            const OnscreenElement* lhs,
+            const OnscreenElement* rhs) const;
+};
+
+struct OnscreenElementPtrDepthComp{
     bool operator()(
             const OnscreenElement* lhs,
             const OnscreenElement* rhs) const;

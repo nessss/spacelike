@@ -15,7 +15,7 @@
 #include <set>
 #include <vector>
 
-typedef std::set<OnscreenElement*, OnscreenElementPtrComp> ElementSet;
+typedef std::set<OnscreenElement*, OnscreenElementPtrGuidComp> ElementSet;
 
 class Output{
     public:

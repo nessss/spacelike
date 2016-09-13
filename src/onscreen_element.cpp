@@ -46,9 +46,15 @@ bool operator!=(
     return !(lhs.guid() == rhs.guid());
 }
 
-bool OnscreenElementPtrComp::operator()(
+bool OnscreenElementPtrGuidComp::operator()(
         const OnscreenElement* lhs,
         const OnscreenElement* rhs) const {
     return *lhs < *rhs;
+}
+
+bool OnscreenElementPtrDepthComp::operator()(
+        const OnscreenElement* lhs,
+        const OnscreenElement* rhs) const {
+    return lhs->depth() < rhs->depth();
 }
 
