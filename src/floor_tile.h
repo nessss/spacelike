@@ -9,10 +9,11 @@
 class FloorTile : public EnvironmentElement{
     public:
         FloorTile();
-        FloorTile(int,int);
-        FloorTile(int,int,char);
+        FloorTile(int x, int y);
+        FloorTile(int x, int y, char symbol);
         bool visible();
         bool known();
+        bool move(int x, int y);
         bool blocksMovement();
 };
 

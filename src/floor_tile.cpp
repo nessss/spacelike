@@ -25,5 +25,11 @@ bool FloorTile::known(){
 }
 
 bool FloorTile::blocksMovement(){
+    /* always traversable */
+    return false;
+}
+
+bool FloorTile::move(int x, int y){
+    /* cannot move */
     return false;
 }

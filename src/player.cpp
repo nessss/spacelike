@@ -24,10 +24,10 @@ bool Player::known(){
     return true;
 }
 
-int Player::move(int x, int y){
-    if(m_x + x < 0){ return 1; }
-    if(m_y + y < 0){ return 1; }
+bool Player::move(int x, int y){
+    if(m_x + x < 0){ return false; }
+    if(m_y + y < 0){ return false; }
     m_x += x;
     m_y += y;
-    return 0;
+    return true;
 }

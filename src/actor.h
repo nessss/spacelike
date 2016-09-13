@@ -9,7 +9,12 @@
 
 class Actor : public OnscreenElement{
     public:
-        virtual int move(int, int) = 0;
+        int hp(){ return m_hp; }
+        int hp(int hp){ m_hp = hp; return hp; }
+
+    private:
+        int m_hp;
+
 };
 
 #endif

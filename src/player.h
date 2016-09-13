@@ -14,7 +14,7 @@ class Player : public Actor {
         Player(int, int);
         bool visible();
         bool known();
-        int move(int, int);
+        bool move(int, int);
 };
 
 #endif /* PLAYER_H */
