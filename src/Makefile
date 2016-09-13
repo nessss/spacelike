@@ -1,4 +1,4 @@
-objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o
+objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o
 flags = -std=c++11
 
 mac: $(objects) guid_mac.o build
@@ -29,6 +29,9 @@ item.o: item.cpp build
 
 floor_tile.o: floor_tile.cpp build
 	g++ $(flags) -c floor_tile.cpp -o ../build/floor_tile.o
+
+zone.o: zone.cpp build
+	g++ $(flags) -c zone.cpp -o ../build/zone.o
 
 input.o: input.cpp build
 	g++ $(flags) -c input.cpp -o ../build/input.o

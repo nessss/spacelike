@@ -7,10 +7,14 @@
 
 #include "onscreen_element.h"
 #include "guid.h"
-#include <unordered_map>
+#include <set>
+#include <unordered_set>
 #include <vector>
 
-typedef std::unordered_map<Guid, OnscreenElement*> ElementMap;
+typedef std::unordered_set<OnscreenElement*> ElementSet;
+typedef std::set<OnscreenElement*, OnscreenElementPtrDepthComp> ElementDepthSet;
+typedef std::vector<ElementDepthSet> ElementDepthSetVector;
+typedef std::vector<OnscreenElement*> ElementVector;
 
 class Zone{
     public:
@@ -29,15 +33,24 @@ class Zone{
 
         OnscreenElement* topmostElementAt(int x, int y);
 
-        const std::vector& topmostElements(){ return m_topmostElements; }
+        const ElementVector topmostElements();
 
     private:
+        int flattenCoordinates(int x, int y);
+        int getFlatCoordinates(const OnscreenElement& element);
         void updateTopmostElements();
+        void updateTopmostElementAt(int flatCoordinate);
         void updateTopmostElementAt(int x, int y);
 
+        ElementDepthSet& depthSetAtCoordinates(int x, int y);
+        ElementDepthSet& depthSetAtElementCoordinates(OnscreenElement* element);
+        bool addElementToCoordinateVector(OnscreenElement *element);
+        bool removeElementfromCoordinateVector(OnscreenElement *element);
+
         int m_w, m_h; /* dimensions */
-        ElementMap m_elements;
-        std::vector<OnscreenElement*> m_topmostElements;
-}
+        ElementSet m_elementSet;
+        ElementVector m_topmostElements;
+        ElementDepthSetVector m_elementsByCoordinates;
+};
 
 #endif /* ifndef ZONE_H */
