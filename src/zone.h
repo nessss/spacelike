@@ -37,18 +37,22 @@ class Zone{
 
     private:
         int flattenCoordinates(int x, int y);
-        int getFlatCoordinates(const OnscreenElement& element);
-        void updateTopmostElements();
-        void updateTopmostElementAt(int flatCoordinate);
-        void updateTopmostElementAt(int x, int y);
+        int flattenCoordinates(const OnscreenElement& element);
 
-        ElementDepthSet& depthSetAtCoordinates(int x, int y);
-        ElementDepthSet& depthSetAtElementCoordinates(OnscreenElement* element);
+        void updateTopmostElements();
+        void updateTopmostElementAt(int x, int y);
+        void updateTopmostElementAt(int flatCoordinates);
+        void updateTopmostElementAt(OnscreenElement* element);
+
+        ElementDepthSet& depthSetAt(int x, int y);
+        ElementDepthSet& depthSetAt(int flatCoordinates);
+        ElementDepthSet& depthSetAt(OnscreenElement* element);
+
         bool addElementToCoordinateVector(OnscreenElement *element);
         bool removeElementfromCoordinateVector(OnscreenElement *element);
 
         int m_w, m_h; /* dimensions */
-        ElementSet m_elementSet;
+        ElementSet m_elementSet; /* all registered elements */
         ElementVector m_topmostElements;
         ElementDepthSetVector m_elementsByCoordinates;
 };

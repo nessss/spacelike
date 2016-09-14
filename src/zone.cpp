@@ -19,7 +19,7 @@ bool Zone::addElement(OnscreenElement *element){
     if(!elementRegistered(element)){
         m_elementSet.insert(element);
 
-        int idx = getFlatCoordinates(*element);
+        int idx = flattenCoordinates(*element);
         m_elementsByCoordinates[idx].insert(element);
         updateTopmostElementAt(idx);
         return true;
@@ -39,11 +39,10 @@ bool Zone::moveElement(OnscreenElement *element, int x, int y){
     if(elementRegistered(element)){
         int prev_x = element->x();
         int prev_y = element->y();
-        ElementDepthSet& oldLocation = depthSetAtElementCoordinates(
-                element);
+        ElementDepthSet& oldLocation = depthSetAt(element);
         if(element->move(x, y)){
             oldLocation.erase(element);
-            depthSetAtElementCoordinates(element).insert(element);
+            depthSetAt(element).insert(element);
             updateTopmostElementAt(prev_x, prev_y);
             updateTopmostElementAt(element->x(), element->y());
             return true;
@@ -52,11 +51,17 @@ bool Zone::moveElement(OnscreenElement *element, int x, int y){
     return false;
 }
 
+const ElementVector* Zone::topmostElements() const {
+    return &m_topmostElements;
+}
+
+/* private methods */
+
 int Zone::flattenCoordinates(int x, int y){
     return x + (y * m_w);
 }
 
-int Zone::getFlatCoordinates(const OnscreenElement& element){
+int Zone::flattenCoordinates(const OnscreenElement& element){
     return flattenCoordinates(element.x(), element.y());
 }
 
@@ -66,36 +71,38 @@ void Zone::updateTopmostElements(){
     }
 }
 
-void Zone::updateTopmostElementAt(int flatCoordinate){
+void Zone::updateTopmostElementAt(int flatCoordinates){
     OnscreenElement* element;
-    element = *(m_elementsByCoordinates[flatCoordinate].begin());
-    m_topmostElements[flatCoordinate] = element;
+    element = *(m_elementsByCoordinates[flatCoordinates].begin());
+    m_topmostElements[flatCoordinates] = element;
 }
 
 void Zone::updateTopmostElementAt(int x, int y){
     updateTopmostElementAt(flattenCoordinates(x, y));
 }
 
+void Zone::updateTopmostElementAt(OnscreenElement* element){
+    updateTopmostElementAt(flattenCoordinates(element));
+}
+
 OnscreenElement* Zone::topmostElementAt(int x, int y){
     return m_topmostElements[flattenCoordinates(x, y)];
 }
 
-const ElementVector* Zone::topmostElements() const {
-    return &m_topmostElements;
-}
-
-ElementDepthSet& Zone::depthSetAtCoordinates(int x, int y){
+ElementDepthSet& Zone::depthSetAt(int x, int y){
     return m_elementsByCoordinates[flattenCoordinates(x, y)];
 } 
 
-ElementDepthSet& Zone::depthSetAtElementCoordinates(OnscreenElement* element){
-    return depthSetAtCoordinates(element->x(), element->y());
+ElementDepthSet& Zone::depthSetAt(int flatCoordinates){
+    return m_elementsByCoordinates[flatCoordinates];
+} 
+
+ElementDepthSet& Zone::depthSetAt(OnscreenElement* element){
+    return depthSetAt(element->x(), element->y());
 }
 
 bool Zone::addElementToCoordinateVector(OnscreenElement *element){
-    ElementDepthSet& coordinateSet = depthSetAtCoordinates(
-            element->x(),
-            element->y());
+    ElementDepthSet& coordinateSet = depthSetAt(element);
     if(coordinateSet.count(element) > 0){
         return false;
     }
