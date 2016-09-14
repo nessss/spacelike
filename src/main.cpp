@@ -47,6 +47,7 @@ int main(int argc, char *argv[]){
 
     input.setFocusedActor(&player);
     zone.addElement(&player);
+    player.zone(&zone);
 
     output.refreshGameWindow();
 
@@ -58,4 +59,3 @@ int main(int argc, char *argv[]){
 
     Application::finish(0);
 }
-

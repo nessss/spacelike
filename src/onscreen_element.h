@@ -20,8 +20,6 @@ class OnscreenElement{
         int y() const { return m_y; }
         int depth() const { return m_depth; }      /* draw order */
 
-
-
     protected:
         OnscreenElement();
         std::size_t m_guid;

@@ -62,36 +62,21 @@ Output& Output::getInstance(){
 
 void Output::refreshGameWindow(){
     if(m_zone == NULL) return;
-    /* draw elements */
-
-    std::cerr << "zone not null" << std::endl;
 
     int cursor_y, cursor_x; /* save cursor position */
     getyx(m_gameWindow, cursor_y, cursor_x);
 
-    std::cerr << "cursor position saved" << std::endl;
-
     const ElementVector* elements = m_zone->topmostElements();
-
-    std::cerr << "ElementVector ref saved" << std::endl;
-
-    std::cerr << "adding chars to window: ";
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
         std::cerr << (*it)->symbol();
         mvwaddch(m_gameWindow, (*it)->y(), (*it)->x(), (*it)->symbol());
     }
 
-    std::cerr << std::endl;
-    std::cerr << "chars addded to window" << std::endl;
-
     wmove(m_gameWindow, cursor_y, cursor_x); /* reset cursor */
 
-    std::cerr << "cursor replaced" << std::endl;
     refresh();
     wrefresh(m_gameWindow);
-
-    std::cerr << "window refreshed" << std::endl;
 }
 
 void Output::setZone(Zone* zone){

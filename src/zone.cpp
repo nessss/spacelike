@@ -19,7 +19,7 @@ bool Zone::addElement(OnscreenElement *element){
     if(!elementRegistered(element)){
         m_elementSet.insert(element);
 
-        int idx = flattenCoordinates(*element);
+        int idx = flattenCoordinates(element);
         m_elementsByCoordinates[idx].insert(element);
         updateTopmostElementAt(idx);
         return true;
@@ -35,18 +35,13 @@ bool Zone::removeElement(OnscreenElement *element){
     return false;
 }
 
-bool Zone::moveElement(OnscreenElement *element, int x, int y){
+bool Zone::moveElement(OnscreenElement *element, int old_x, int old_y){
     if(elementRegistered(element)){
-        int prev_x = element->x();
-        int prev_y = element->y();
-        ElementDepthSet& oldLocation = depthSetAt(element);
-        if(element->move(x, y)){
-            oldLocation.erase(element);
-            depthSetAt(element).insert(element);
-            updateTopmostElementAt(prev_x, prev_y);
-            updateTopmostElementAt(element->x(), element->y());
-            return true;
-        }
+        depthSetAt(old_x, old_y).erase(element);
+        depthSetAt(element).insert(element);
+        updateTopmostElementAt(old_x, old_y);
+        updateTopmostElementAt(element->x(), element->y());
+        return true;
     }
     return false;
 }
@@ -61,8 +56,8 @@ int Zone::flattenCoordinates(int x, int y){
     return x + (y * m_w);
 }
 
-int Zone::flattenCoordinates(const OnscreenElement& element){
-    return flattenCoordinates(element.x(), element.y());
+int Zone::flattenCoordinates(const OnscreenElement* element){
+    return flattenCoordinates(element->x(), element->y());
 }
 
 void Zone::updateTopmostElements(){
@@ -101,11 +96,42 @@ ElementDepthSet& Zone::depthSetAt(OnscreenElement* element){
     return depthSetAt(element->x(), element->y());
 }
 
+bool Zone::addToDepthSet(OnscreenElement* element){
+    ElementDepthSet& theSet = depthSetAt(element);
+    for(auto it = theSet.begin(); it != theSet.end(); ++it){
+        if( (*it)->guid() == element->guid() ){
+            return false;
+        }
+    }
+    theSet.insert(element);
+    return true;
+}
+
+bool Zone::removeFromDepthSet(OnscreenElement* element){
+    ElementDepthSet& theSet = depthSetAt(element);
+    for(auto it = theSet.begin(); it != theSet.end(); ++it){
+        if( (*it)->guid() == element->guid() ){
+            theSet.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Zone::addElementToCoordinateVector(OnscreenElement *element){
     ElementDepthSet& coordinateSet = depthSetAt(element);
     if(coordinateSet.count(element) > 0){
         return false;
     }
     coordinateSet.insert(element);
+    return true;
+}
+
+bool Zone::removeElementFromCoordinateVector(OnscreenElement *element){
+    ElementDepthSet& coordinateSet = depthSetAt(element);
+    if(coordinateSet.count(element) == 0){
+        return false;
+    }
+    coordinateSet.erase(element);
     return true;
 }

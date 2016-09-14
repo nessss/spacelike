@@ -37,7 +37,7 @@ class Zone{
 
     private:
         int flattenCoordinates(int x, int y);
-        int flattenCoordinates(const OnscreenElement& element);
+        int flattenCoordinates(const OnscreenElement* element);
 
         void updateTopmostElements();
         void updateTopmostElementAt(int x, int y);
@@ -48,8 +48,11 @@ class Zone{
         ElementDepthSet& depthSetAt(int flatCoordinates);
         ElementDepthSet& depthSetAt(OnscreenElement* element);
 
+        bool addToDepthSet(OnscreenElement* element);
+        bool removeFromDepthSet(OnscreenElement* element);
+
         bool addElementToCoordinateVector(OnscreenElement *element);
-        bool removeElementfromCoordinateVector(OnscreenElement *element);
+        bool removeElementFromCoordinateVector(OnscreenElement *element);
 
         int m_w, m_h; /* dimensions */
         ElementSet m_elementSet; /* all registered elements */
