@@ -1,4 +1,5 @@
-/* Abstract base class for actors, or entities that exist
+/**
+ * Base class for actors. Represents entities that exist
  * in world space and can interact with their surroundings.
  */
 
@@ -10,15 +11,16 @@
 
 class Actor : public OnscreenElement{
     public:
-        int hp(){ return m_hp; }
-        int hp(int hp){ m_hp = hp; return hp; }
+        int hp(){ return m_hp; } //!< Get current health points
+        int hp(int hp){ m_hp = hp; return hp; } //!< Set current health points
 
-        Zone* zone() const { return m_zone; }
-        Zone* zone(Zone* zone){ m_zone = zone; return m_zone; }
+        Zone* zone() const { return m_zone; } //!< Get current zone
+        Zone* zone(Zone* zone){ m_zone = zone; return m_zone; } //!< Set current zone
 
     protected:
-        int m_hp;
-        Zone* m_zone;
+        Actor(){} //!< Constructor
+        int m_hp; //!< Health points
+        Zone* m_zone;  //!< Current zone
 
 };
 
