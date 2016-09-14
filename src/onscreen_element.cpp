@@ -3,7 +3,7 @@
 OnscreenElement::OnscreenElement(){
     static GuidGenerator generator;
     auto newGuid = generator.newGuid();
-    m_guid = std::hash<Guid>{}(newGuid);
+    m_id = std::hash<Guid>{}(newGuid);
     m_symbol = ' ';
     m_x = 0;
     m_y = 0;

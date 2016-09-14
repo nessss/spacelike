@@ -99,7 +99,7 @@ ElementDepthSet& Zone::depthSetAt(OnscreenElement* element){
 bool Zone::addToDepthSet(OnscreenElement* element){
     ElementDepthSet& theSet = depthSetAt(element);
     for(auto it = theSet.begin(); it != theSet.end(); ++it){
-        if( (*it)->guid() == element->guid() ){
+        if( (*it)->id() == element->id() ){
             return false;
         }
     }
@@ -110,7 +110,7 @@ bool Zone::addToDepthSet(OnscreenElement* element){
 bool Zone::removeFromDepthSet(OnscreenElement* element){
     ElementDepthSet& theSet = depthSetAt(element);
     for(auto it = theSet.begin(); it != theSet.end(); ++it){
-        if( (*it)->guid() == element->guid() ){
+        if( (*it)->id() == element->id() ){
             theSet.erase(it);
             return true;
         }

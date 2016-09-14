@@ -14,7 +14,7 @@ class OnscreenElement{
         virtual bool known() = 0;           /* location known?          */
         virtual bool move(int, int) = 0;
 
-        std::size_t guid() const { return m_guid; }
+        std::size_t id() const { return m_id; }
         char symbol() const { return m_symbol; }   /* on-screen representation */
         int x() const { return m_x; }              /* location in world-space */
         int y() const { return m_y; }
@@ -22,7 +22,7 @@ class OnscreenElement{
 
     protected:
         OnscreenElement();
-        std::size_t m_guid;
+        std::size_t m_id;
         char m_symbol;
         int m_x, m_y;
         int m_depth;
