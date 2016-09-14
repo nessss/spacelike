@@ -2,8 +2,8 @@
  * in world space and can interact with their surroundings.
  */
 
-#ifndef __ACTOR_H_INCLUDED__
-#define __ACTOR_H_INCLUDED__
+#ifndef ACTOR_H
+#define ACTOR_H
 
 #include "onscreen_element.h"
 #include "zone.h"
