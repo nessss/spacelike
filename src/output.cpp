@@ -35,12 +35,23 @@ Output::Output(){
 
 }
 
-void Output::init(int w, int h, int offset){
-    m_w = w;
-    m_h = h;
-    m_offset = offset;
-    lastScreen = std::vector<char>(m_w * m_h, ' ');
-    m_gameWindow = newwin(m_h, m_w, m_offset, m_offset);
+void Output::init(
+        int gameWindowW,
+        int gameWindowH,
+        int gameWindowX,
+        int gameWindowY){
+
+    m_gameWindowW = gameWindowW; 
+    m_gameWindowH = gameWindowH; 
+    m_gameWindowX = gameWindowX; 
+    m_gameWindowY = gameWindowY; 
+
+    m_gameWindow = newwin(
+            m_gameWindowH,
+            m_gameWindowW,
+            m_gameWindowY,
+            m_gameWindowX);
+
     assert(m_gameWindow != NULL);
 }
 
@@ -50,36 +61,41 @@ Output& Output::getInstance(){
 }
 
 void Output::refreshGameWindow(){
-    std::vector<int> depths(m_w * m_h, INT_MAX);
-    std::vector<char> screen(lastScreen);
-
-    /* find lowest depth values (i.e. highest objects) */
-    for(auto entry = elements.begin(); entry != elements.end(); ++entry){
-        OnscreenElement *element = *entry;
-        // skip out-of-range elements
-        if(element->x() < 0 || element->x() > m_w) continue;
-        if(element->y() < 0 || element->y() > m_h) continue;
-
-        int idx = (element->y() * m_w) + element->x();
-        if(element->depth() <= depths[idx]){
-            depths[idx] = element->depth();
-            screen[idx] = element->symbol();
-        }
-    }
-
+    if(m_zone == NULL) return;
     /* draw elements */
+
+    std::cerr << "zone not null" << std::endl;
 
     int cursor_y, cursor_x; /* save cursor position */
     getyx(m_gameWindow, cursor_y, cursor_x);
-    for(int i = 0; i < screen.size(); ++i){
-        if(screen[i] != lastScreen[i]){
-            mvwaddch(m_gameWindow, i/m_w, i%m_w, screen[i]);
-            lastScreen[i] = screen[i];
-        }
+
+    std::cerr << "cursor position saved" << std::endl;
+
+    const ElementVector* elements = m_zone->topmostElements();
+
+    std::cerr << "ElementVector ref saved" << std::endl;
+
+    std::cerr << "adding chars to window: ";
+
+    for(auto it = elements->cbegin(); it < elements->cend(); ++it){
+        std::cerr << (*it)->symbol();
+        mvwaddch(m_gameWindow, (*it)->y(), (*it)->x(), (*it)->symbol());
     }
+
+    std::cerr << std::endl;
+    std::cerr << "chars addded to window" << std::endl;
+
     wmove(m_gameWindow, cursor_y, cursor_x); /* reset cursor */
+
+    std::cerr << "cursor replaced" << std::endl;
     refresh();
     wrefresh(m_gameWindow);
+
+    std::cerr << "window refreshed" << std::endl;
+}
+
+void Output::setZone(Zone* zone){
+    m_zone = zone;
 }
 
 void Output::getCursorPosition(int &x, int &y){
@@ -96,12 +112,4 @@ void Output::getGameWindowCursorPosition(int &x, int &y){
 
 void Output::setGameWindowCursorPosition(int x, int y){
     wmove(m_gameWindow, y, x);
-}
-
-void Output::addElement(OnscreenElement* element){
-    elements.insert(element);
-}
-
-void Output::removeElement(OnscreenElement *element){
-    elements.erase(element);
 }

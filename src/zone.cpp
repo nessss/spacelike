@@ -68,7 +68,7 @@ void Zone::updateTopmostElements(){
 
 void Zone::updateTopmostElementAt(int flatCoordinate){
     OnscreenElement* element;
-    element = *(m_elementsByCoordinates[flatCoordinate].end()--);
+    element = *(m_elementsByCoordinates[flatCoordinate].begin());
     m_topmostElements[flatCoordinate] = element;
 }
 
@@ -78,6 +78,10 @@ void Zone::updateTopmostElementAt(int x, int y){
 
 OnscreenElement* Zone::topmostElementAt(int x, int y){
     return m_topmostElements[flattenCoordinates(x, y)];
+}
+
+const ElementVector* Zone::topmostElements() const {
+    return &m_topmostElements;
 }
 
 ElementDepthSet& Zone::depthSetAtCoordinates(int x, int y){
@@ -92,7 +96,7 @@ bool Zone::addElementToCoordinateVector(OnscreenElement *element){
     ElementDepthSet& coordinateSet = depthSetAtCoordinates(
             element->x(),
             element->y());
-    if(coordinateSet.count(element)){
+    if(coordinateSet.count(element) > 0){
         return false;
     }
     coordinateSet.insert(element);

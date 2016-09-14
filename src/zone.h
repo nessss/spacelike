@@ -33,7 +33,7 @@ class Zone{
 
         OnscreenElement* topmostElementAt(int x, int y);
 
-        const ElementVector topmostElements();
+        const ElementVector* topmostElements() const;
 
     private:
         int flattenCoordinates(int x, int y);

@@ -4,36 +4,49 @@
 #include <assert.h>
 #include <list>
 #include <iostream>
+#include <typeinfo>
 
 #include "main.h"
 #include "application.h"
 #include "input.h"
 #include "output.h"
+#include "zone.h"
 #include "player.h"
 #include "floor_tile.h"
 
 int main(int argc, char *argv[]){
 
-    int rows = 20;
-    int cols = 40;
-    int gameWindowOffset = 3;
+    int gameWindowW = 40;
+    int gameWindowH = 20;
+    int gameWindowX = 3;
+    int gameWindowY = 3;
 
     Player player;
     Input input;
     Output &output = Output::getInstance();
-    output.init(cols, rows, gameWindowOffset);
+
+    output.init(
+            gameWindowW,
+            gameWindowH,
+            gameWindowX,
+            gameWindowY);
+
+    Zone zone(40, 20);
+    
+    output.setZone(&zone);
+
     std::list<FloorTile> floorTiles;
 
-    for(int x = 0; x < cols; x++){
-        for(int y = 0; y < rows; y++){
+    for(int x = 0; x < zone.w(); x++){
+        for(int y = 0; y < zone.h(); y++){
             floorTiles.emplace_front(x, y);
-            output.addElement(&(floorTiles.front()));
+            zone.addElement(&(floorTiles.front()));
         }
     }
 
-    input.setFocusedActor(&player);
-    output.addElement(&player);
 
+    input.setFocusedActor(&player);
+    zone.addElement(&player);
 
     output.refreshGameWindow();
 
