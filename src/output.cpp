@@ -74,22 +74,27 @@ void Output::refreshGameWindow(){
     wrefresh(m_gameWindow);
 }
 
-void Output::setZone(Zone* zone){
-    m_zone = zone;
+Zone* Output::zone(){
+    return m_zone;
 }
 
-void Output::getCursorPosition(int &x, int &y){
+Zone* Output::zone(Zone* zone){
+    m_zone = zone;
+    return m_zone;
+}
+
+void Output::cursorPosition(int &x, int &y){
     getyx(stdscr, y, x);
 }
 
-void Output::setCursorPosition(int x, int y){
+void Output::cursorPosition(int x, int y){
     move(y, x);
 }
 
-void Output::getGameWindowCursorPosition(int &x, int &y){
+void Output::gameWindowCursorPosition(int &x, int &y){
     getyx(m_gameWindow, y, x);
 }
 
-void Output::setGameWindowCursorPosition(int x, int y){
+void Output::gameWindowCursorPosition(int x, int y){
     wmove(m_gameWindow, y, x);
 }

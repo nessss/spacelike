@@ -6,7 +6,6 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "main.h"
 #include "application.h"
 #include "input.h"
 #include "output.h"
@@ -30,7 +29,7 @@ int main(int argc, char *argv[]){
 
     Zone zone(40, 20);
 
-    output.setZone(&zone);
+    output.zone(&zone);
 
     std::list<FloorTile> floorTiles;
 

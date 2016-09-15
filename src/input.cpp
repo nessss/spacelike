@@ -10,54 +10,54 @@ void Input::processInput(){
     switch(c){
         case 'h':
             m_focusedActor->move(-1, 0);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'j':
             m_focusedActor->move(0, 1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'k':
             m_focusedActor->move(0, -1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'l':
             m_focusedActor->move(1, 0);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'y':
             m_focusedActor->move(-1, -1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'u':
             m_focusedActor->move(1, -1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'b':
             m_focusedActor->move(-1, 1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case 'n':
             m_focusedActor->move(1, 1);
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     m_focusedActor->x(),
                     m_focusedActor->y());
             break;
         case '0':
-            m_output.setGameWindowCursorPosition(
+            m_output.gameWindowCursorPosition(
                     0, 0);
             break;
     }

@@ -43,14 +43,16 @@ class Output{
         int gameWindowY() const { return m_gameWindowY; }
         int gameWindowY(int y){ m_gameWindowY = y; return m_gameWindowY; }
 
-        void getCursorPosition(int &x, int &y);
-        void setCursorPosition(int x, int y);
+        Zone* zone();
+        Zone* zone(Zone* zone);
 
-        void getGameWindowCursorPosition(int &x, int &y);
-        void setGameWindowCursorPosition(int x, int y);
+        void cursorPosition(int &x, int &y);
+        void cursorPosition(int x, int y);
+
+        void gameWindowCursorPosition(int &x, int &y);
+        void gameWindowCursorPosition(int x, int y);
 
         void refreshGameWindow();
-        void setZone(Zone* zone);
 
     private:
         Output();
@@ -58,12 +60,11 @@ class Output{
         void operator=(Output const&);
 
         WINDOW* m_gameWindow;
-        const Zone* m_zone;
+        Zone* m_zone;
 
         int m_gameWindowW, m_gameWindowH; /* width and height */
         int m_gameWindowX, m_gameWindowY; /* upper-left corner */
 
-        std::vector<char> lastScreen;
         Zone::ElementSet elements;
 };
 
