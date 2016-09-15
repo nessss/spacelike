@@ -3,6 +3,8 @@
 Item::Item(string name, string description){
     m_name = name;
     m_description = description;
+    m_depth = 10;
+    m_symbol = '%';
 }
 
 bool Item::visible(){
