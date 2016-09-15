@@ -17,7 +17,7 @@ Zone::Zone(int w, int h){
  * @details The number of columns.
  * @retval int Width of the zone
  */
-Zone::w(){
+int Zone::w(){
     return m_w;
 }
 
@@ -26,7 +26,7 @@ Zone::w(){
  * @copydetails Zone::w()
  * @retval int New width of the zone
  */
-Zone::w(int w){
+int Zone::w(int w){
     // TODO: make this not break everything
     m_w = w;
     return m_w;
@@ -37,7 +37,7 @@ Zone::w(int w){
  * @details The number of rows.
  * @retval int Height of the zone
  */
-Zone::h(){
+int Zone::h(){
     return m_h;
 }
 
@@ -46,7 +46,7 @@ Zone::h(){
  * @copydetails Zone::h()
  * @retval int New height of the zone
  */
-Zone::h(int h){
+int Zone::h(int h){
     // TODO: make this not break everything
     m_h = h;
     return m_h;
