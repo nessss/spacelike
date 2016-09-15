@@ -66,7 +66,7 @@ void Output::refreshGameWindow(){
     int cursor_y, cursor_x; /* save cursor position */
     getyx(m_gameWindow, cursor_y, cursor_x);
 
-    const ElementVector* elements = m_zone->topmostElements();
+    const Zone::ElementVector* elements = m_zone->topmostElements();
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
         std::cerr << (*it)->symbol();

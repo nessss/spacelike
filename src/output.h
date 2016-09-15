@@ -59,7 +59,7 @@ class Output{
         int m_gameWindowX, m_gameWindowY; /* upper-left corner */
 
         std::vector<char> lastScreen;
-        ElementSet elements;
+        Zone::ElementSet elements;
 };
 
 #endif /* ifndef OUTPUT_H */
