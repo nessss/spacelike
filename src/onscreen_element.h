@@ -9,6 +9,7 @@
 #include <functional>
 #include "guid.h"
 
+class Zone;
 class OnscreenElement{
     public:
         //! @return `true` if the element is visible
@@ -16,7 +17,7 @@ class OnscreenElement{
         //! @return `true` if the element location is known
         virtual bool known() = 0;
         //! @return `true` if the element successfully moved relative to its current location
-        virtual bool move(int, int) = 0;
+        virtual bool move(int, int);
 
         //! Return unique ID for this element
         std::size_t id() const { return m_id; }
@@ -28,6 +29,10 @@ class OnscreenElement{
         int y() const { return m_y; }
         //! Return draw order depth of element
         int depth() const { return m_depth; }
+
+        Zone* zone() const { return m_zone; } //!< Get current zone
+        Zone* zone(Zone* zone){ m_zone = zone; return m_zone; } //!< Set current zone
+
 
     protected:
         //! Constructor
@@ -42,6 +47,8 @@ class OnscreenElement{
         //@}
         //! Draw order depth
         int m_depth;
+
+        Zone* m_zone;
 };
 
 

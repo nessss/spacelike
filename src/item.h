@@ -27,6 +27,10 @@ class Item : public OnscreenElement, public NamedElement{
         /** Set item weight @param weight @retval int */
         int weight(int weight){ m_weight = weight; return m_weight; }
 
+        bool visible();
+        bool known();
+        bool move(int x, int y);
+
     private:
         string m_name;
         string m_description;

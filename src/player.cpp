@@ -25,13 +25,5 @@ bool Player::known(){
 }
 
 bool Player::move(int x, int y){
-    if(m_zone == NULL){
-        return false; 
-    }
-    if(m_x + x < 0 || m_x + x >= m_zone->w()){ return false; }
-    if(m_y + y < 0 || m_y + y >= m_zone->h()){ return false; }
-    m_x += x;
-    m_y += y;
-    m_zone->moveElement(this, m_x - x, m_y - y);
-    return true;
+    return OnscreenElement::move(x, y);
 }
