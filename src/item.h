@@ -6,10 +6,10 @@
 
 using namespace std;
 
-class Item : public OnscreenElement{
+class Item : public OnscreenElement, public NamedElement{
     public:
         /** Construct item with optional name and description */
-        Item(string name="", string desc="");
+        Item(string name="", string description="");
 
         /** Get name of item @retval string*/
         string name(){ return m_name; }
@@ -28,7 +28,7 @@ class Item : public OnscreenElement{
 
     private:
         string m_name;
-        string m_desc;
+        string m_description;
         int m_weight;
 };
 
