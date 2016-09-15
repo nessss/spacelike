@@ -3,6 +3,7 @@
 
 #include <string>
 #include "onscreen_element.h"
+#include "named_element.h"
 
 using namespace std;
 
@@ -17,9 +18,9 @@ class Item : public OnscreenElement, public NamedElement{
         string name(string name){ m_name = name; return m_name; }
 
         /** Get item description @retval string */
-        string description(){ return m_desc; }
+        string description(){ return m_description; }
         /** Set item description @param desc @retval string */
-        string description(string desc){ m_desc = desc; return m_desc; }
+        string description(string desc){ m_description = desc; return m_description; }
 
         /** Get item weight @retval int */
         int weight(){ return m_weight; }
