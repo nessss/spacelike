@@ -117,21 +117,3 @@ bool Zone::removeFromDepthSet(OnscreenElement* element){
     }
     return false;
 }
-
-bool Zone::addElementToCoordinateVector(OnscreenElement *element){
-    ElementDepthSet& coordinateSet = depthSetAt(element);
-    if(coordinateSet.count(element) > 0){
-        return false;
-    }
-    coordinateSet.insert(element);
-    return true;
-}
-
-bool Zone::removeElementFromCoordinateVector(OnscreenElement *element){
-    ElementDepthSet& coordinateSet = depthSetAt(element);
-    if(coordinateSet.count(element) == 0){
-        return false;
-    }
-    coordinateSet.erase(element);
-    return true;
-}
