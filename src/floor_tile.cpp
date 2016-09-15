@@ -6,7 +6,7 @@
  * @param[in] y
  */
 FloorTile::FloorTile(int x, int y){
-    m_symbol = '#';
+    m_symbol = '.';
     m_x = x;
     m_y = y;
     m_depth = 100;
