@@ -10,6 +10,7 @@ class Item : OnscreenElement{
     public:
         /** Construct item with optional name and description */
         Item(string name="", string desc="");
+
         /** Get name of item @retval string*/
         string name(){ return m_name; }
         /** Set name of item @param name @retval string*/

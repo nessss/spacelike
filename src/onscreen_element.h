@@ -1,5 +1,4 @@
-/** @file onscreen_element.h
- *
+/**
  * Abstract base class for elements that can be printed to the screen.
  */
 
