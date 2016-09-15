@@ -1,4 +1,4 @@
-/* Global application functions. */
+/** Global application functions. */
 
 #ifndef APPLICATION_H
 #define APPLICATION_H 
