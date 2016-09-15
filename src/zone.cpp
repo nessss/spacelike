@@ -76,6 +76,7 @@ bool Zone::addElement(OnscreenElement *element){
         int idx = flattenCoordinates(element);
         m_elementsByCoordinates[idx].insert(element);
         updateTopmostElementAt(idx);
+        element->zone(this);
         return true;
     }
     return false;
