@@ -65,7 +65,6 @@ void Output::refreshGameWindow(){
     const Zone::ElementVector* elements = m_zone->topmostElements();
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
-        std::cerr << (*it)->symbol();
         mvwaddch(m_gameWindow, (*it)->y(), (*it)->x(), (*it)->symbol());
     }
 
