@@ -35,16 +35,12 @@ Output::Output(){
 
 }
 
-void Output::init(
-        int gameWindowW,
-        int gameWindowH,
-        int gameWindowX,
-        int gameWindowY){
+void Output::init(const OutputOptions& options){
 
-    m_gameWindowW = gameWindowW; 
-    m_gameWindowH = gameWindowH; 
-    m_gameWindowX = gameWindowX; 
-    m_gameWindowY = gameWindowY; 
+    m_gameWindowW = options.gameWindowW; 
+    m_gameWindowH = options.gameWindowH; 
+    m_gameWindowX = options.gameWindowX; 
+    m_gameWindowY = options.gameWindowY; 
 
     m_gameWindow = newwin(
             m_gameWindowH,
