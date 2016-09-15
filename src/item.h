@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Item : OnscreenElement{
+class Item : public OnscreenElement{
     public:
         /** Construct item with optional name and description */
         Item(string name="", string desc="");
