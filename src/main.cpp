@@ -12,6 +12,7 @@
 #include "zone.h"
 #include "player.h"
 #include "floor_tile.h"
+#include "item.h"
 
 int main(int argc, char *argv[]){
 
@@ -42,7 +43,12 @@ int main(int argc, char *argv[]){
 
     input.focusedActor(&player);
     zone.addElement(&player);
-    player.zone(&zone);
+
+    Item slimeMold;
+    zone.addElement(&slimeMold);
+    slimeMold.name("Slime mold");
+    slimeMold.description("A tasty, juicy, nutritious slime mold. Your mouth waters just thinking about it.");
+    slimeMold.move(12, 14);
 
     output.refreshGameWindow();
 
