@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
             gameWindowY);
 
     Zone zone(40, 20);
-    
+
     output.setZone(&zone);
 
     std::list<FloorTile> floorTiles;
@@ -43,7 +43,6 @@ int main(int argc, char *argv[]){
             zone.addElement(&(floorTiles.front()));
         }
     }
-
 
     input.setFocusedActor(&player);
     zone.addElement(&player);
