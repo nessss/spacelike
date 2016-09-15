@@ -11,20 +11,21 @@
 #include <unordered_set>
 #include <vector>
 
-typedef std::unordered_set<OnscreenElement*> ElementSet;
-typedef std::set<OnscreenElement*, OnscreenElementPtrDepthComp> ElementDepthSet;
-typedef std::vector<ElementDepthSet> ElementDepthSetVector;
-typedef std::vector<OnscreenElement*> ElementVector;
-
 class Zone{
+
     public:
+        typedef std::vector<OnscreenElement*> ElementVector;
+        typedef std::unordered_set<OnscreenElement*> ElementSet;
+        typedef std::set<OnscreenElement*, OnscreenElementPtrDepthComp> ElementDepthSet;
+        typedef std::vector<ElementDepthSet> ElementDepthSetVector;
+
         Zone(int w, int h);
 
-        int w(){ return m_w; }
-        int w(int w){ m_w = w; return m_w; }
+        int w();
+        int w(int w);
 
-        int h(){ return m_h; }
-        int h(int h){ m_h = h; return m_h; }
+        int h();
+        int h(int h);
 
         bool elementRegistered(OnscreenElement *element);
         bool addElement(OnscreenElement *element);
@@ -51,11 +52,8 @@ class Zone{
         bool addToDepthSet(OnscreenElement* element);
         bool removeFromDepthSet(OnscreenElement* element);
 
-        bool addElementToCoordinateVector(OnscreenElement *element);
-        bool removeElementFromCoordinateVector(OnscreenElement *element);
-
-        int m_w, m_h; /* dimensions */
-        ElementSet m_elementSet; /* all registered elements */
+        int m_w, m_h;
+        ElementSet m_elementSet;
         ElementVector m_topmostElements;
         ElementDepthSetVector m_elementsByCoordinates;
 };
