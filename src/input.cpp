@@ -1,5 +1,9 @@
 #include "input.h"
 
+/**
+ * Process one character from keyboard input, and take appropriate action.
+ * @param c The character to process
+ */
 void Input::processInput(){
     char c = (char)getch();
     if(m_focusedActor == 0) return;
@@ -57,4 +61,22 @@ void Input::processInput(){
                     0, 0);
             break;
     }
+}
+
+/**
+ * Get pointer to actor over which player has active control.
+ * @retval Actor* Focused `Actor*`
+ */
+Actor* Input::focusedActor(){
+    return m_focusedActor; 
+}
+
+/**
+ * Set actor over which player has active control.
+ * @param actor `Actor*` to be focused
+ * @retval Actor* Newly focused `Actor*`
+ */
+Actor* Input::focusedActor(Actor* actor){
+    m_focusedActor = actor; 
+    return m_focusedActor;
 }

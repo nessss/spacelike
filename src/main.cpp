@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     OutputOptions options;
     options.gameWindowW = 40;
     options.gameWindowH = 20;
-    output.init(options);
+    options.gameWindowX = 3;
     options.gameWindowY = 3;
 
     Output &output = Output::getInstance();
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
         }
     }
 
-    input.setFocusedActor(&player);
+    input.focusedActor(&player);
     zone.addElement(&player);
     player.zone(&zone);
 
