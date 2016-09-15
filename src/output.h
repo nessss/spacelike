@@ -16,15 +16,20 @@
 #include <set>
 #include <vector>
 
+struct OutputOptions{
+    int gameWindowW;
+    int gameWindowH;
+    int gameWindowX;
+    int gameWindowY;
+};
+
 class Output{
     public:
+        /** Get the instance @retval Output& */
         static Output& getInstance();
 
-        void init(
-                int gameWindowW,
-                int gameWindowH,
-                int gameWindowX,
-                int gameWindowY);
+        /** Initialize with options @retval Output& */
+        void init(const OutputOptions& options);
 
         int gameWindowW() const { return m_gameWindowW; }
         int gameWindowW(int w){ m_gameWindowW = w; return m_gameWindowW; }

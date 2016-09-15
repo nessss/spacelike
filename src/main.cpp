@@ -16,20 +16,17 @@
 
 int main(int argc, char *argv[]){
 
-    int gameWindowW = 40;
-    int gameWindowH = 20;
-    int gameWindowX = 3;
-    int gameWindowY = 3;
-
     Player player;
     Input input;
-    Output &output = Output::getInstance();
 
-    output.init(
-            gameWindowW,
-            gameWindowH,
-            gameWindowX,
-            gameWindowY);
+    OutputOptions options;
+    options.gameWindowW = 40;
+    options.gameWindowH = 20;
+    output.init(options);
+    options.gameWindowY = 3;
+
+    Output &output = Output::getInstance();
+    output.init(options);
 
     Zone zone(40, 20);
 
