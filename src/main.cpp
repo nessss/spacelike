@@ -17,6 +17,8 @@
 int main(int argc, char *argv[]){
 
     Player player;
+    player.symbol('h');
+
     Input& input = Input::getInstance();
 
     OutputOptions options;

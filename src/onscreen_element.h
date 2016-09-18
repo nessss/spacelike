@@ -23,12 +23,14 @@ class OnscreenElement{
         std::size_t id() const { return m_id; }
         //! Return on-screen representation
         char symbol() const { return m_symbol; }
+        char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
         //! Return X coordinate in world space
         int x() const { return m_x; }
         //! Return Y coordinate in world space
         int y() const { return m_y; }
         //! Return draw order depth of element
         int depth() const { return m_depth; }
+        int depth(int newDepth){ m_depth = newDepth; return m_depth; }
 
         Zone* zone() const { return m_zone; } //!< Get current zone
         Zone* zone(Zone* zone){ m_zone = zone; return m_zone; } //!< Set current zone
