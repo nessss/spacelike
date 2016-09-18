@@ -83,18 +83,18 @@ Zone* Output::zone(Zone* zone){
     return m_zone;
 }
 
-void Output::cursorPosition(int &x, int &y){
-    getyx(stdscr, y, x);
+void Output::cursorPosition(int *x, int *y){
+    getyx(stdscr, *y, *x);
 }
 
-void Output::cursorPosition(int x, int y){
+void Output::cursorPosition(const int x, const int y){
     move(y, x);
 }
 
-void Output::gameWindowCursorPosition(int &x, int &y){
-    getyx(m_gameWindow, y, x);
+void Output::gameWindowCursorPosition(int *x, int *y){
+    getyx(m_gameWindow, *y, *x);
 }
 
-void Output::gameWindowCursorPosition(int x, int y){
+void Output::gameWindowCursorPosition(const int x, const int y){
     wmove(m_gameWindow, y, x);
 }

@@ -46,11 +46,11 @@ class Output{
         Zone* zone();
         Zone* zone(Zone* zone);
 
-        void cursorPosition(int &x, int &y);
-        void cursorPosition(int x, int y);
+        void cursorPosition(int* x, int* y);
+        void cursorPosition(const int x, const int y);
 
-        void gameWindowCursorPosition(int &x, int &y);
-        void gameWindowCursorPosition(int x, int y);
+        void gameWindowCursorPosition(int* x, int* y);
+        void gameWindowCursorPosition(const int x, const int y);
 
         void refreshGameWindow();
 
