@@ -9,12 +9,15 @@
 
 class Input{
     public:
+        static Input& getInstance();
         void processInput();
 
         Actor* focusedActor();
         Actor* focusedActor(Actor *actor);
 
     private:
+        Input(){};
+        ~Input(){};
         Actor* m_focusedActor;
         Output &m_output = Output::getInstance();
 };

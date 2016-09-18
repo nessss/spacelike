@@ -17,7 +17,7 @@
 int main(int argc, char *argv[]){
 
     Player player;
-    Input input;
+    Input& input = Input::getInstance();
 
     OutputOptions options;
     options.gameWindowW = 40;

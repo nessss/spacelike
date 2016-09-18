@@ -1,5 +1,10 @@
 #include "input.h"
 
+Input& Input::getInstance(){
+    static Input instance;
+    return instance;
+}
+
 /**
  * Process one character from keyboard input, and take appropriate action.
  * @param c The character to process
