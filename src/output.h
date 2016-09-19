@@ -12,6 +12,7 @@
 #include "onscreen_element.h"
 #include "zone.h"
 #include "guid.h"
+#include "item.h"
 #include <curses.h>
 #include <set>
 #include <vector>
@@ -21,6 +22,8 @@ struct OutputOptions{
     int gameWindowH;
     int gameWindowX;
     int gameWindowY;
+
+    int inventoryW;
 };
 
 class Output{
@@ -31,17 +34,7 @@ class Output{
         /** Initialize with options @retval Output& */
         void init(const OutputOptions& options);
 
-        int gameWindowW() const { return m_gameWindowW; }
-        int gameWindowW(int w){ m_gameWindowW = w; return m_gameWindowW; }
-
-        int gameWindowH() const { return m_gameWindowH; }
-        int gameWindowH(int h){ m_gameWindowH = h; return m_gameWindowH; }
-
-        int gameWindowX() const { return m_gameWindowX; }
-        int gameWindowX(int x){ m_gameWindowX = x; return m_gameWindowX; }
-
-        int gameWindowY() const { return m_gameWindowY; }
-        int gameWindowY(int y){ m_gameWindowY = y; return m_gameWindowY; }
+        OutputOptions options;
 
         Zone* zone();
         Zone* zone(Zone* zone);
@@ -53,6 +46,7 @@ class Output{
         void gameWindowCursorPosition(const int x, const int y);
 
         void refreshGameWindow();
+        void displayInventory(std::set<Item*> items);
 
     private:
         Output();
@@ -60,10 +54,8 @@ class Output{
         void operator=(Output const&);
 
         WINDOW* m_gameWindow;
+        WINDOW* m_inventory;
         Zone* m_zone;
-
-        int m_gameWindowW, m_gameWindowH; /* width and height */
-        int m_gameWindowX, m_gameWindowY; /* upper-left corner */
 
         Zone::ElementSet elements;
 };

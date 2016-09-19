@@ -26,7 +26,8 @@ int main(int argc, char *argv[]){
     options.gameWindowW = 40;
     options.gameWindowH = 20;
     options.gameWindowX = 3;
-    options.gameWindowY = 3;
+    options.gameWindowY = 2;
+    options.inventoryW = 20;
 
     Output &output = Output::getInstance();
     output.init(options);

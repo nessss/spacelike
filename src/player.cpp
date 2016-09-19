@@ -36,6 +36,7 @@ bool Player::take(){
         if(item != NULL){
             m_tile->removeElement(*it);
             inventory.insert(item);
+            Output::getInstance().displayInventory(inventory);
             return true;
         }
     }

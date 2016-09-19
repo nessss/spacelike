@@ -37,18 +37,26 @@ Output::Output(){
 
 void Output::init(const OutputOptions& options){
 
-    m_gameWindowW = options.gameWindowW; 
-    m_gameWindowH = options.gameWindowH; 
-    m_gameWindowX = options.gameWindowX; 
-    m_gameWindowY = options.gameWindowY; 
-
     m_gameWindow = newwin(
-            m_gameWindowH,
-            m_gameWindowW,
-            m_gameWindowY,
-            m_gameWindowX);
+            options.gameWindowH,
+            options.gameWindowW,
+            options.gameWindowY,
+            options.gameWindowX);
 
     assert(m_gameWindow != NULL);
+
+    m_inventory = newwin(
+            options.gameWindowH,
+            options.inventoryW,
+            options.gameWindowY,
+            options.gameWindowW + options.gameWindowX);
+
+    assert(m_gameWindow != NULL);
+
+    /* draw box for inventory */
+    box(m_inventory, 0, 0);
+    refresh();
+    wrefresh(m_inventory);
 }
 
 Output& Output::getInstance(){
@@ -72,6 +80,16 @@ void Output::refreshGameWindow(){
 
     refresh();
     wrefresh(m_gameWindow);
+}
+
+void Output::displayInventory(std::set<Item*> items){
+    int y = 2;
+    int x = 1;
+    for(auto it = items.begin(); it != items.end(); ++it){
+        mvwaddstr(m_inventory, y++, x, (*it)->name().c_str());
+    }
+    refresh();
+    wrefresh(m_inventory);
 }
 
 Zone* Output::zone(){
