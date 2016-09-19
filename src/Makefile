@@ -1,4 +1,4 @@
-objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o
+objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o tile.o
 flags = -std=c++11
 
 mac: $(objects) guid_mac.o build
@@ -11,6 +11,10 @@ cygwin: $(objects) guid_cyg.o build
 
 build:
 	mkdir -p ../build
+
+link:
+	cd ../build;\
+	g++ $(flags) $(objects) guid_mac.o -o spacelike -lncurses -framework CoreFoundation
 
 main.o: main.cpp build
 	g++ $(flags) -c main.cpp -o ../build/main.o
@@ -26,6 +30,9 @@ player.o: player.cpp build
 
 item.o: item.cpp build
 	g++ $(flags) -c item.cpp -o ../build/item.o
+
+tile.o: tile.cpp build
+	g++ $(flags) -c tile.cpp -o ../build/tile.o
 
 floor_tile.o: floor_tile.cpp build
 	g++ $(flags) -c floor_tile.cpp -o ../build/floor_tile.o
