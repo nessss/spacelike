@@ -9,7 +9,19 @@ Zone::Zone(int w, int h){
     m_h = h;
 
     m_topmostElements.assign(m_w * m_h, NULL);
-    m_elementsByCoordinates.resize(m_w * m_h);
+    m_tiles.assign(m_w * m_h, NULL);
+    for(int x = 0; x < m_w; ++x){
+        for(int y = 0; y < m_w; ++y){
+            int idx = flattenCoordinates(x, y);
+            if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
+                m_tiles[idx] = new Tile(x, y, '#');
+                m_tiles[idx]->blocksMovement(true);
+            }else{
+                m_tiles[idx] = new Tile(x, y);
+            }
+        }
+    }
+    updateTopmostElements();
 }
 
 /**
@@ -52,6 +64,18 @@ int Zone::h(int h){
     return m_h;
 }
 
+Tile* Zone::tile(int xy){
+    return m_tiles[xy];
+}
+
+Tile* Zone::tile(int x, int y){
+    return tile(flattenCoordinates(x, y));
+}
+
+Tile* Zone::tile(OnscreenElement* element){
+    return tile(flattenCoordinates(element));
+}
+
 /**
  * Check if an OnscreenElement has been added to the zone
  * @param[in] element* Pointer to the OnscreenElement whose registration status to check
@@ -74,7 +98,7 @@ bool Zone::addElement(OnscreenElement *element){
         m_elementSet.insert(element);
 
         int idx = flattenCoordinates(element);
-        m_elementsByCoordinates[idx].insert(element);
+        m_tiles[idx]->addElement(element);
         updateTopmostElementAt(idx);
         element->zone(this);
         return true;
@@ -90,7 +114,9 @@ bool Zone::addElement(OnscreenElement *element){
 bool Zone::removeElement(OnscreenElement *element){
     // TODO: remove from depth set as well
     if(elementRegistered(element)){
+        m_tiles[flattenCoordinates(element)]->removeElement(element);
         m_elementSet.erase(element);
+
         return true;
     }
     return false;
@@ -103,12 +129,20 @@ bool Zone::removeElement(OnscreenElement *element){
  * @param[in] old_y Y coordinate of the element's old position
  * @retval bool `true` if the element was moved successfully, `false` otherwise
  */
-bool Zone::moveElement(OnscreenElement *element, int old_x, int old_y){
+bool Zone::moveElement(OnscreenElement *element, int deltaX, int deltaY){
     if(elementRegistered(element)){
-        depthSetAt(old_x, old_y).erase(element);
-        depthSetAt(element).insert(element);
-        updateTopmostElementAt(old_x, old_y);
-        updateTopmostElementAt(element->x(), element->y());
+        int oldX = element->x();
+        int oldY = element->y();
+        int newX = element->x() + deltaX;
+        int newY = element->y() + deltaY;
+        if(newX < 0 || newX >= w()){ return false; }
+        if(newY < 0 || newY >= h()){ return false; }
+        m_tiles[flattenCoordinates(element)]->moveElement(
+                element, m_tiles[flattenCoordinates(newX, newY)]);
+        element->x(newX);
+        element->y(newY);
+        updateTopmostElementAt(oldX, oldY);
+        updateTopmostElementAt(element);
         return true;
     }
     return false;
@@ -170,7 +204,7 @@ void Zone::updateTopmostElementAt(int x, int y){
  */
 void Zone::updateTopmostElementAt(int flatCoordinates){
     OnscreenElement* element;
-    element = *(m_elementsByCoordinates[flatCoordinates].begin());
+    element = m_tiles[flatCoordinates]->topmostElement();
     m_topmostElements[flatCoordinates] = element;
 }
 
@@ -190,66 +224,6 @@ void Zone::updateTopmostElementAt(OnscreenElement* element){
  */
 OnscreenElement* Zone::topmostElementAt(int x, int y){
     return m_topmostElements[flattenCoordinates(x, y)];
-}
-
-/**
- * Get a reference to the depth-sorted set of elements at a specific location
- * @param[in] x X coordinate of location
- * @param[in] y Y coordinate of location
- * @retval ElementDepthSet& Reference to std::set<OnscreenElement*, OnscreenElementPtrDepthComp>
- */
-Zone::ElementDepthSet& Zone::depthSetAt(int x, int y){
-    return m_elementsByCoordinates[flattenCoordinates(x, y)];
-} 
-
-/**
- * @copybrief Zone::depthSetAt(int,int)
- * @param[in] flatCoordinates Flattened coordinates of location
- * @retval ElementDepthSet& Reference to std::set<OnscreenElement*, OnscreenElementPtrDepthComp>
- */
-Zone::ElementDepthSet& Zone::depthSetAt(int flatCoordinates){
-    return m_elementsByCoordinates[flatCoordinates];
-} 
-
-/**
- * @copybrief Zone::depthSetAt(int,int)
- * @param[in] element Flattened coordinates of location
- * @retval ElementDepthSet& Reference to std::set<OnscreenElement*, OnscreenElementPtrDepthComp>
- */
-Zone::ElementDepthSet& Zone::depthSetAt(OnscreenElement* element){
-    return depthSetAt(element->x(), element->y());
-}
-
-/**
- * Add an OnscreenElement to the depth-ordered set at its coordinates
- * @param[in] OnscreenElement* Element to be added
- * @retval bool `true` if the element was successfully added, `false` otherwise
- */
-bool Zone::addToDepthSet(OnscreenElement* element){
-    ElementDepthSet& theSet = depthSetAt(element);
-    for(auto it = theSet.begin(); it != theSet.end(); ++it){
-        if( (*it)->id() == element->id() ){
-            return false;
-        }
-    }
-    theSet.insert(element);
-    return true;
-}
-
-/**
- * Remove an OnscreenElement from the depth-ordered set at its coordinates
- * @param[in] OnscreenElement* Element to be added
- * @retval bool `true` if the element was successfully added, `false` otherwise
- */
-bool Zone::removeFromDepthSet(OnscreenElement* element){
-    ElementDepthSet& theSet = depthSetAt(element);
-    for(auto it = theSet.begin(); it != theSet.end(); ++it){
-        if( (*it)->id() == element->id() ){
-            theSet.erase(it);
-            return true;
-        }
-    }
-    return false;
 }
 
 /**

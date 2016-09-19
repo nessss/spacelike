@@ -21,13 +21,10 @@ bool Player::known(){
     return true;
 }
 
-bool Player::move(const int x, const int y){
-    if(OnscreenElement::move(x, y)){
-        int currentX, currentY;
-        Output::getInstance().gameWindowCursorPosition(&currentX, &currentY);
-        const int newX = currentX + x;
-        const int newY = currentY + y;
-        Output::getInstance().gameWindowCursorPosition(newX, newY);
+bool Player::move(const int deltaX, const int deltaY){
+    if(m_zone->tile(m_x + deltaX, m_y + deltaY)->blocksMovement()) return false;
+    if(OnscreenElement::move(deltaX, deltaY)){
+        Output::getInstance().gameWindowCursorPosition(m_x, m_y);
         return true;
     }
     return false;

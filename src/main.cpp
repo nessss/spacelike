@@ -11,13 +11,14 @@
 #include "output.h"
 #include "zone.h"
 #include "player.h"
+#include "tile.h"
 #include "floor_tile.h"
 #include "item.h"
 
 int main(int argc, char *argv[]){
 
-    Player player;
-    player.symbol('h');
+    Player player(1, 1);
+    player.symbol('@');
 
     Input& input = Input::getInstance();
 
@@ -31,30 +32,33 @@ int main(int argc, char *argv[]){
     output.init(options);
 
     Zone zone(40, 20);
+    std::cerr << "zone constructed" << std::endl;
 
     output.zone(&zone);
-
-    std::list<FloorTile> floorTiles;
-
-    for(int x = 0; x < zone.w(); x++){
-        for(int y = 0; y < zone.h(); y++){
-            floorTiles.emplace_front(x, y);
-            zone.addElement(&(floorTiles.front()));
-        }
-    }
+    std::cerr << "zone output set" << std::endl;
 
     zone.addElement(&player);
+    Output::getInstance().gameWindowCursorPosition(player.x(), player.y());
+    std::cerr << "player added to zone" << std::endl;
 
     Item slimeMold;
     zone.addElement(&slimeMold);
+    std::cerr << "slime mold added to zone" << std::endl;
+
     slimeMold.name("Slime mold");
     slimeMold.description("A tasty, juicy, nutritious slime mold. Your mouth waters just thinking about it.");
+    std::cerr << "slime mold info set" << std::endl;
     slimeMold.move(12, 14);
+    std::cerr << "slime mold moved" << std::endl;
 
     output.refreshGameWindow();
+    std::cerr << "game window refreshed" << std::endl;
+
+    cerr << (*(zone.topmostElements()->begin()))->symbol() << std::endl;
 
     while(true){
         input.processInput();
+        std::cerr << "input parsed" << std::endl;
 
         output.refreshGameWindow();
     }

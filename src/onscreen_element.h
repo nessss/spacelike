@@ -10,6 +10,8 @@
 #include "guid.h"
 
 class Zone;
+class Tile;
+
 class OnscreenElement{
     public:
         //! @return `true` if the element is visible
@@ -26,14 +28,19 @@ class OnscreenElement{
         char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
         //! Return X coordinate in world space
         int x() const { return m_x; }
+        int x(int x){ m_x = x; return m_x; }
         //! Return Y coordinate in world space
         int y() const { return m_y; }
+        int y(int y){ m_y = y; return m_y; }
         //! Return draw order depth of element
         int depth() const { return m_depth; }
         int depth(int newDepth){ m_depth = newDepth; return m_depth; }
 
         Zone* zone() const { return m_zone; } //!< Get current zone
         Zone* zone(Zone* zone){ m_zone = zone; return m_zone; } //!< Set current zone
+        
+        Tile* tile() const { return m_tile; } //!< Set current tile
+        Tile* tile(Tile* tile){ m_tile = tile; return m_tile; } //!< Get current tile
 
 
     protected:
@@ -51,6 +58,7 @@ class OnscreenElement{
         int m_depth;
 
         Zone* m_zone;
+        Tile* m_tile;
 };
 
 
