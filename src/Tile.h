@@ -15,6 +15,7 @@ class Tile : public OnscreenElement{
         Tile(int x=0, int y=0, char symbol='.');
         OnscreenElement* topmostElement();
 
+        const std::set<OnscreenElement*> elements();
         bool hasElement(OnscreenElement* element);
         bool addElement(OnscreenElement* element);
         bool removeElement(OnscreenElement* element);

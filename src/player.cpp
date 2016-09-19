@@ -30,6 +30,18 @@ bool Player::move(const int deltaX, const int deltaY){
     return false;
 }
 
+bool Player::take(){
+    for(auto it = m_tile->elements().begin(); it != m_tile->elements().end(); ++it){
+        Item* item = dynamic_cast<Item*>(*it);
+        if(item != NULL){
+            m_tile->removeElement(*it);
+            inventory.insert(item);
+            return true;
+        }
+    }
+    return false;
+}
+
 void Player::registerActions(){
     using namespace std::placeholders;
 
@@ -41,6 +53,7 @@ void Player::registerActions(){
     actions.emplace_back(this, std::bind(&Player::move, _1,  1, -1), 'u');
     actions.emplace_back(this, std::bind(&Player::move, _1, -1,  1), 'b');
     actions.emplace_back(this, std::bind(&Player::move, _1,  1,  1), 'n');
+    actions.emplace_back(this, std::bind(&Player::take, _1), ',');
 
     Input& input = Input::getInstance();
     for(auto it = actions.begin(); it != actions.end(); ++it){

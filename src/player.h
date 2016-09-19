@@ -6,9 +6,11 @@
 #define PLAYER_H
 
 #include <functional>
+#include <set>
 #include "onscreen_element.h"
 #include "actor.h"
 #include "input.h"
+#include "item.h"
 
 /* forward declaration */
 class PlayerInputAction;
@@ -20,9 +22,11 @@ class Player : public Actor {
         bool visible();
         bool known();
         bool move(int, int);
+        bool take();
     private:
         void registerActions();
         std::vector<PlayerInputAction> actions;
+        std::set<Item*> inventory;
 };
 
 class PlayerInputAction : public InputAction{

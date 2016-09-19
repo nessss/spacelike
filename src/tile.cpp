@@ -19,6 +19,10 @@ bool Tile::hasElement(OnscreenElement* element){
     return false;
 }
 
+const std::set<OnscreenElement*> Tile::elements(){
+    return m_elements;
+}
+
 bool Tile::addElement(OnscreenElement* element){
     if(m_elements.count(element) == 0){
         m_elements.insert(element);
