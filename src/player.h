@@ -25,8 +25,8 @@ class Player : public Actor {
         bool take();
     private:
         void registerActions();
-        std::vector<PlayerInputAction> actions;
-        std::set<Item*> inventory;
+        std::vector<PlayerInputAction> m_actions;
+        std::set<Item*> m_inventory;
 };
 
 class PlayerInputAction : public InputAction{

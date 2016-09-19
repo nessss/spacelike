@@ -35,8 +35,9 @@ bool Player::take(){
         Item* item = dynamic_cast<Item*>(*it);
         if(item != NULL){
             m_tile->removeElement(*it);
-            inventory.insert(item);
-            Output::getInstance().displayInventory(inventory);
+            m_inventory.insert(item);
+            Output::getInstance().updateInventory(m_inventory);
+            Output::getInstance().displayInventory();
             return true;
         }
     }
@@ -46,18 +47,18 @@ bool Player::take(){
 void Player::registerActions(){
     using namespace std::placeholders;
 
-    actions.emplace_back(this, std::bind(&Player::move, _1, -1,  0), 'h');
-    actions.emplace_back(this, std::bind(&Player::move, _1,  0,  1), 'j');
-    actions.emplace_back(this, std::bind(&Player::move, _1,  0, -1), 'k');
-    actions.emplace_back(this, std::bind(&Player::move, _1,  1,  0), 'l');
-    actions.emplace_back(this, std::bind(&Player::move, _1, -1, -1), 'y');
-    actions.emplace_back(this, std::bind(&Player::move, _1,  1, -1), 'u');
-    actions.emplace_back(this, std::bind(&Player::move, _1, -1,  1), 'b');
-    actions.emplace_back(this, std::bind(&Player::move, _1,  1,  1), 'n');
-    actions.emplace_back(this, std::bind(&Player::take, _1), ',');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1, -1,  0), 'h');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1,  0,  1), 'j');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1,  0, -1), 'k');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1,  1,  0), 'l');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1, -1, -1), 'y');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1,  1, -1), 'u');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1, -1,  1), 'b');
+    m_actions.emplace_back(this, std::bind(&Player::move, _1,  1,  1), 'n');
+    m_actions.emplace_back(this, std::bind(&Player::take, _1), ',');
 
     Input& input = Input::getInstance();
-    for(auto it = actions.begin(); it != actions.end(); ++it){
+    for(auto it = m_actions.begin(); it != m_actions.end(); ++it){
         input.addAction(&(*it));
     }
 }

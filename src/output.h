@@ -32,7 +32,7 @@ class Output{
         static Output& getInstance();
 
         /** Initialize with options @retval Output& */
-        void init(const OutputOptions& options);
+        void init(const OutputOptions& options, Zone* startingZone);
 
         OutputOptions options;
 
@@ -46,18 +46,21 @@ class Output{
         void gameWindowCursorPosition(const int x, const int y);
 
         void refreshGameWindow();
-        void displayInventory(std::set<Item*> items);
+        void updateInventory(std::set<Item*> items);
+        void displayInventory();
 
     private:
         Output();
         Output(Output&);
         void operator=(Output const&);
 
-        WINDOW* m_gameWindow;
-        WINDOW* m_inventory;
+        WINDOW* m_gamePad;
+        WINDOW* m_inventoryPad;
         Zone* m_zone;
 
         Zone::ElementSet elements;
+
+        int m_longestName;
 };
 
 #endif /* ifndef OUTPUT_H */

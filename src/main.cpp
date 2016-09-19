@@ -30,11 +30,11 @@ int main(int argc, char *argv[]){
     options.inventoryW = 20;
 
     Output &output = Output::getInstance();
-    output.init(options);
 
     Zone zone(40, 20);
     std::cerr << "zone constructed" << std::endl;
 
+    output.init(options, &zone);
     output.zone(&zone);
     std::cerr << "zone output set" << std::endl;
 
