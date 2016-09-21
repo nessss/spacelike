@@ -1,59 +1,67 @@
-objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o tile.o
-flags = -std=c++11
+CC = g++ # compiler
+LL = g++ # compiler
+CFLAGS = -std=c++11 -Wall # compiler flags
+LFLAGS = -lncurses # linker flags
+GUIDFLAGS = 
 
-mac: $(objects) guid_mac.o build
-	cd ../build;\
-	g++ $(flags) $(objects) guid_mac.o -o spacelike -lncurses -framework CoreFoundation
+objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o tile.o guid.o
 
-cygwin: $(objects) guid_cyg.o build
-	cd ../build;\
-	g++ $(flags) $(objects) guid_cyg.o -o spacelike -lncurses -lOle32
+UNAME = $(shell uname -o)
+
+ifeq ($(UNAME), Cygwin)
+	GUIDFLAGS = -DGUID_WINDOWS
+	LFLAGS += -lOle32
+endif
+
+ifeq ($(UNAME), Darwin)
+	GUIDFLAGS = -DGUID_CFUUID
+	LFLAGS += -framework CoreFoundation
+endif
+
+all: $(objects) link
 
 build:
 	mkdir -p ../build
 
-link:
+link: build
 	cd ../build;\
-	g++ $(flags) $(objects) guid_mac.o -o spacelike -lncurses -framework CoreFoundation
+	g++ $(objects) -o spacelike $(LFLAGS)
 
 main.o: main.cpp build
-	g++ $(flags) -c main.cpp -o ../build/main.o
+	g++ $(CFLAGS) -c main.cpp -o ../build/main.o
 
 application.o: application.cpp build
-	g++ $(flags) -c application.cpp -o ../build/application.o
+	g++ $(CFLAGS) -c application.cpp -o ../build/application.o
 
 onscreen_element.o: onscreen_element.cpp build
-	g++ $(flags) -c onscreen_element.cpp -o ../build/onscreen_element.o
+	g++ $(CFLAGS) -c onscreen_element.cpp -o ../build/onscreen_element.o
 
 player.o: player.cpp build
-	g++ $(flags) -c player.cpp -o ../build/player.o
+	g++ $(CFLAGS) -c player.cpp -o ../build/player.o
 
 item.o: item.cpp build
-	g++ $(flags) -c item.cpp -o ../build/item.o
+	g++ $(CFLAGS) -c item.cpp -o ../build/item.o
 
 tile.o: tile.cpp build
-	g++ $(flags) -c tile.cpp -o ../build/tile.o
+	g++ $(CFLAGS) -c tile.cpp -o ../build/tile.o
 
 door.o: door.cpp build
-	g++ $(flags) -c door.cpp -o ../build/door.o
+	g++ $(CFLAGS) -c door.cpp -o ../build/door.o
 
 floor_tile.o: floor_tile.cpp build
-	g++ $(flags) -c floor_tile.cpp -o ../build/floor_tile.o
+	g++ $(CFLAGS) -c floor_tile.cpp -o ../build/floor_tile.o
 
 zone.o: zone.cpp build
-	g++ $(flags) -c zone.cpp -o ../build/zone.o
+	g++ $(CFLAGS) -c zone.cpp -o ../build/zone.o
 
 input.o: input.cpp build
-	g++ $(flags) -c input.cpp -o ../build/input.o
+	g++ $(CFLAGS) -c input.cpp -o ../build/input.o
 
 output.o: output.cpp build
-	g++ $(flags) -c output.cpp -o ../build/output.o
+	g++ $(CFLAGS) -c output.cpp -o ../build/output.o
 
-guid_mac.o: guid.cpp build
-	g++ $(flags) -c guid.cpp -o ../build/guid_mac.o -DGUID_CFUUID
-
-guid_cyg.o: guid.cpp build
-	g++ $(flags) -c guid.cpp -o ../build/guid_cyg.o -DGUID_WINDOWS
+guid.o: guid.cpp build
+	g++ $(CFLAGS) -c guid.cpp -o ../build/guid.o $(GUIDFLAGS)
 
 clean:
-	-rm -r ../build/* 2> /dev/null
+	@-rm -rf ../build/*
