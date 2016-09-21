@@ -1,4 +1,8 @@
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "zone.h"
+#include "rapidxml.hpp"
 
 /**
  * @param[in] w Width of the zone
@@ -154,6 +158,53 @@ bool Zone::moveElement(OnscreenElement *element, int deltaX, int deltaY){
  */
 const Zone::ElementVector* Zone::topmostElements() const {
     return &m_topmostElements;
+}
+
+/**
+ * Load a map from a .map file
+ */
+void Zone::loadMap(const char* path){
+    using namespace rapidxml;
+
+    std::ifstream file(path, std::ifstream::in);
+    std::string content( (std::istreambuf_iterator<char>(file) ),
+                         (std::istreambuf_iterator<char>()     ));
+
+    xml_document<> document;
+    document.parse<parse_trim_whitespace>((char*)content.c_str());
+
+    xml_node<>* objectNode = document.first_node("object");
+    std::cerr << objectNode->first_attribute("name")->value() << std::endl;
+
+    xml_node<>* legendNode = objectNode->first_node("legend");
+    for(xml_node<>* entryNode = legendNode->first_node();
+            entryNode; entryNode = entryNode->next_sibling()){
+        std::cerr << entryNode->first_attribute("symbol")->value() << " - ";
+        std::cerr << entryNode->first_attribute("type")->value() << std::endl;
+    }
+
+    xml_node<>* mapNode = objectNode->first_node("map");
+    char* mapData = mapNode->value();
+    std::cerr << mapNode->value_size() << std::endl;
+    int i = 0;
+    int row = 0;
+    int column = 0;
+    while(true){
+        while(*mapData != '\n'){
+            std::cerr << *mapData;
+            std::cerr << column;
+            i++;
+            column++;
+            mapData++;
+            if(i >= mapNode->value_size()) break;
+        }
+        column = 0;
+        std::cerr << row << std::endl;
+        mapData++;
+        i++;
+        row++;
+        if(i >= mapNode->value_size()) break;
+    }
 }
 
 /*******************************************

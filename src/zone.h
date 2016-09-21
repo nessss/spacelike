@@ -41,6 +41,8 @@ class Zone{
 
         const ElementVector* topmostElements() const;
 
+        void loadMap(const char* path);
+
     private:
         int flattenCoordinates(int x, int y);
         int flattenCoordinates(const OnscreenElement* element);

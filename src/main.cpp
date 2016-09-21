@@ -32,6 +32,9 @@ int main(int argc, char *argv[]){
     Output &output = Output::getInstance();
 
     Zone zone(40, 20);
+
+    zone.loadMap("../data/test.map");
+
     std::cerr << "zone constructed" << std::endl;
 
     output.init(options, &zone);
