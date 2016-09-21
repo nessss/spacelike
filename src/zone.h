@@ -7,6 +7,7 @@
 
 #include "onscreen_element.h"
 #include "guid.h"
+#include "tile.h"
 #include <set>
 #include <unordered_set>
 #include <vector>
@@ -27,6 +28,10 @@ class Zone{
         int h();
         int h(int h);
 
+        Tile* tile(int xy);
+        Tile* tile(int x, int y);
+        Tile* tile(OnscreenElement* element);
+
         bool elementRegistered(OnscreenElement *element);
         bool addElement(OnscreenElement *element);
         bool removeElement(OnscreenElement *element);
@@ -35,6 +40,8 @@ class Zone{
         OnscreenElement* topmostElementAt(int x, int y);
 
         const ElementVector* topmostElements() const;
+
+        void loadMap(const char* path);
 
     private:
         int flattenCoordinates(int x, int y);
@@ -45,17 +52,10 @@ class Zone{
         void updateTopmostElementAt(int flatCoordinates);
         void updateTopmostElementAt(OnscreenElement* element);
 
-        ElementDepthSet& depthSetAt(int x, int y);
-        ElementDepthSet& depthSetAt(int flatCoordinates);
-        ElementDepthSet& depthSetAt(OnscreenElement* element);
-
-        bool addToDepthSet(OnscreenElement* element);
-        bool removeFromDepthSet(OnscreenElement* element);
-
         int m_w, m_h;
         ElementSet m_elementSet;
+        std::vector<Tile*> m_tiles;
         ElementVector m_topmostElements;
-        ElementDepthSetVector m_elementsByCoordinates;
 };
 
 #endif /* ifndef ZONE_H */

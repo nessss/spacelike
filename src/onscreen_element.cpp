@@ -11,14 +11,9 @@ OnscreenElement::OnscreenElement(){
     m_depth = INT_MAX;
 }
 
-bool OnscreenElement::move(int x, int y){
+bool OnscreenElement::move(int deltaX, int deltaY){
     if(m_zone == NULL){
         return false; 
     }
-    if(m_x + x < 0 || m_x + x >= m_zone->w()){ return false; }
-    if(m_y + y < 0 || m_y + y >= m_zone->h()){ return false; }
-    m_x += x;
-    m_y += y;
-    m_zone->moveElement(this, m_x - x, m_y - y);
-    return true;
+    return m_zone->moveElement(this, deltaX, deltaY);
 }

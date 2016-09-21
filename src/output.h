@@ -12,6 +12,7 @@
 #include "onscreen_element.h"
 #include "zone.h"
 #include "guid.h"
+#include "item.h"
 #include <curses.h>
 #include <set>
 #include <vector>
@@ -21,6 +22,8 @@ struct OutputOptions{
     int gameWindowH;
     int gameWindowX;
     int gameWindowY;
+
+    int inventoryW;
 };
 
 class Output{
@@ -29,43 +32,35 @@ class Output{
         static Output& getInstance();
 
         /** Initialize with options @retval Output& */
-        void init(const OutputOptions& options);
+        void init(const OutputOptions& options, Zone* startingZone);
 
-        int gameWindowW() const { return m_gameWindowW; }
-        int gameWindowW(int w){ m_gameWindowW = w; return m_gameWindowW; }
-
-        int gameWindowH() const { return m_gameWindowH; }
-        int gameWindowH(int h){ m_gameWindowH = h; return m_gameWindowH; }
-
-        int gameWindowX() const { return m_gameWindowX; }
-        int gameWindowX(int x){ m_gameWindowX = x; return m_gameWindowX; }
-
-        int gameWindowY() const { return m_gameWindowY; }
-        int gameWindowY(int y){ m_gameWindowY = y; return m_gameWindowY; }
+        OutputOptions options;
 
         Zone* zone();
         Zone* zone(Zone* zone);
 
-        void cursorPosition(int &x, int &y);
-        void cursorPosition(int x, int y);
+        void cursorPosition(int* x, int* y);
+        void cursorPosition(const int x, const int y);
 
-        void gameWindowCursorPosition(int &x, int &y);
-        void gameWindowCursorPosition(int x, int y);
+        void gameWindowCursorPosition(int* x, int* y);
+        void gameWindowCursorPosition(const int x, const int y);
 
         void refreshGameWindow();
+        void updateInventory(std::set<Item*> items);
+        void displayInventory();
 
     private:
         Output();
         Output(Output&);
         void operator=(Output const&);
 
-        WINDOW* m_gameWindow;
+        WINDOW* m_gamePad;
+        WINDOW* m_inventoryPad;
         Zone* m_zone;
 
-        int m_gameWindowW, m_gameWindowH; /* width and height */
-        int m_gameWindowX, m_gameWindowY; /* upper-left corner */
-
         Zone::ElementSet elements;
+
+        int m_longestName;
 };
 
 #endif /* ifndef OUTPUT_H */
