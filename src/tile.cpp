@@ -24,15 +24,19 @@ const std::set<OnscreenElement*> Tile::elements(){
 }
 
 bool Tile::addElement(OnscreenElement* element){
-    if(m_elements.count(element) == 0){
-        m_elements.insert(element);
-        element->tile(this);
-        if(m_topmostElement == this || element->depth() < m_topmostElement->depth()){
-            m_topmostElement = element;
-        }
-        return true;
+    if(hasElement(element)){
+        return false;
     }
-    return false;
+
+
+    m_elements.insert(element);
+
+    element->tile(this);
+
+    if(m_topmostElement == this || element->depth() < m_topmostElement->depth()){
+        m_topmostElement = element;
+    }
+    return true;
 }
 
 bool Tile::removeElement(OnscreenElement* element){
