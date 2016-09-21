@@ -15,7 +15,7 @@ Zone::Zone(int w, int h){
     m_topmostElements.assign(m_w * m_h, NULL);
     m_tiles.assign(m_w * m_h, NULL);
     for(int x = 0; x < m_w; ++x){
-        for(int y = 0; y < m_w; ++y){
+        for(int y = 0; y < m_h; ++y){
             int idx = flattenCoordinates(x, y);
             if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
                 m_tiles[idx] = new Tile(x, y, '#');
@@ -103,8 +103,10 @@ bool Zone::addElement(OnscreenElement *element){
 
         int idx = flattenCoordinates(element);
         m_tiles[idx]->addElement(element);
+
         updateTopmostElementAt(idx);
         element->zone(this);
+
         return true;
     }
     return false;
