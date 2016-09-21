@@ -101,7 +101,7 @@ void Output::displayInventory(){
     int startY = options.gameWindowY;
     int startX = maxX - m_longestName - 2;
 
-    int endY = options.gameWindowY + options.gameWindowH;
+    int endY = min(options.gameWindowY + options.gameWindowH, maxY);
     int endX = maxX;
 
     wnoutrefresh(stdscr);
