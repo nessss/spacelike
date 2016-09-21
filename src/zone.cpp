@@ -196,14 +196,14 @@ void Zone::loadMap(const char* path){
             i++;
             column++;
             mapData++;
-            if(i >= mapNode->value_size()) break;
+            if(i >= (int)mapNode->value_size()) break;
         }
         column = 0;
         std::cerr << row << std::endl;
         mapData++;
         i++;
         row++;
-        if(i >= mapNode->value_size()) break;
+        if(i >= (int)mapNode->value_size()) break;
     }
 }
 
