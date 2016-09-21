@@ -64,7 +64,7 @@ bool Tile::moveElement(OnscreenElement* element, Tile* other){
     return false;
 }
 
-bool Tile::blocksMovement() const{
+bool Tile::blocksMovement() const {
     return m_blocksMovement;
 }
 

@@ -24,8 +24,8 @@ class OnscreenElement{
         //! Return unique ID for this element
         std::size_t id() const { return m_id; }
         //! Return on-screen representation
-        char symbol() const { return m_symbol; }
-        char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
+        virtual char symbol() const { return m_symbol; }
+        virtual char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
         //! Return X coordinate in world space
         int x() const { return m_x; }
         int x(int x){ m_x = x; return m_x; }

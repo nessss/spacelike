@@ -34,6 +34,9 @@ item.o: item.cpp build
 tile.o: tile.cpp build
 	g++ $(flags) -c tile.cpp -o ../build/tile.o
 
+door.o: door.cpp build
+	g++ $(flags) -c door.cpp -o ../build/door.o
+
 floor_tile.o: floor_tile.cpp build
 	g++ $(flags) -c floor_tile.cpp -o ../build/floor_tile.o
 
