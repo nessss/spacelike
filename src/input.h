@@ -3,29 +3,30 @@
 #ifndef INPUT_H
 #define INPUT_H 
 
+#include <map>
 #include <curses.h>
-#include <functional>
-#include <unordered_map>
 #include "actor.h"
 #include "output.h"
+
+class InputAction{
+    public:
+        virtual void operator()() = 0;
+        char key(){return m_key;}
+    protected:
+        char m_key;
+};
 
 class Input{
     public:
         static Input& getInstance();
         void processInput();
-
-        bool registerFunction(std::function<void> fn, char input);
-
-        Actor* focusedActor();
-        Actor* focusedActor(Actor *actor);
+        void addAction(InputAction* action);
+        void removeAction(InputAction* action);
 
     private:
         Input(){};
-        Input(Input&){};
-        void operator=(Input const&);
-
-        std::unordered_multimap<char, void*> m_inputMap;
-        std::unordered_multimap<char, OnscreenElement*> m_inputMap;
+        ~Input(){};
+        std::map<char, std::set<InputAction*>> m_actions;
         Actor* m_focusedActor;
         Output &m_output = Output::getInstance();
 };
