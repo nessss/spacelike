@@ -56,9 +56,6 @@ Output& Output::getInstance(){
 void Output::refreshGameWindow(){
     if(m_zone == NULL) return;
 
-    int w, h;
-    getmaxyx(stdscr, w, h);
-
 
     int cursorY, cursorX; /* save cursor position */
     getyx(m_gamePad, cursorY, cursorX);
