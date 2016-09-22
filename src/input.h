@@ -27,7 +27,6 @@ class Input{
         Input(){};
         ~Input(){};
         std::map<char, std::set<InputAction*>> m_actions;
-        Actor* m_focusedActor;
         Output &m_output = Output::getInstance();
 };
 
