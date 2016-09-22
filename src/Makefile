@@ -1,6 +1,6 @@
 CC = g++ # compiler
 LL = g++ # compiler
-CFLAGS = -std=c++11 -Wall # compiler flags
+CFLAGS = -std=c++11 -Wall -I ../include/# compiler flags
 LFLAGS = -lncurses # linker flags
 GUIDFLAGS = 
 
