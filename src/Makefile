@@ -6,14 +6,14 @@ GUIDFLAGS =
 
 objects = main.o application.o player.o floor_tile.o onscreen_element.o input.o output.o item.o zone.o tile.o guid.o
 
-UNAME = $(shell uname -o)
+UNAME := $(shell uname -a)
 
-ifeq ($(UNAME), Cygwin)
+ifneq (,$(findstring Cygwin, "$(UNAME)"))
 	GUIDFLAGS = -DGUID_WINDOWS
 	LFLAGS += -lOle32
 endif
 
-ifeq ($(UNAME), Darwin)
+ifneq (,$(findstring Darwin, "$(UNAME)"))
 	GUIDFLAGS = -DGUID_CFUUID
 	LFLAGS += -framework CoreFoundation
 endif
