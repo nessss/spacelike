@@ -63,7 +63,9 @@ void Output::refreshGameWindow(){
     const Zone::ElementVector* elements = m_zone->topmostElements();
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
-        mvwaddch(m_gamePad, (*it)->y(), (*it)->x(), (*it)->symbol());
+        if(!(*it)->symbolSeen()){
+            mvwaddch(m_gamePad, (*it)->y(), (*it)->x(), (*it)->getSymbol());
+        }
     }
 
     wmove(m_gamePad, cursorY, cursorX); /* reset cursor */
@@ -107,6 +109,9 @@ void Output::displayInventory(){
     doupdate();
 
     getch();
+
+    wnoutrefresh(stdscr);
+    doupdate();
 }
 
 Zone* Output::zone(){

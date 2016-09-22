@@ -16,22 +16,38 @@ class OnscreenElement{
     public:
         //! @return `true` if the element is visible
         virtual bool visible() = 0;
+
         //! @return `true` if the element location is known
         virtual bool known() = 0;
+
         //! @return `true` if the element successfully moved relative to its current location
         virtual bool move(int, int);
 
         //! Return unique ID for this element
         std::size_t id() const { return m_id; }
-        //! Return on-screen representation
-        virtual char symbol() const { return m_symbol; }
+
+        //! Peek at the symbol (don't set the m_symbolSeen flag)
+        virtual char peekSymbol() const { return m_symbol; }
+
+        //! Return on-screen representation and make symbolSeen() return `true` until moved
+        virtual char getSymbol() { m_symbolSeen = true; return m_symbol; }
+
+        //! Set the symbol
         virtual char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
+
+        //! @retval bool `true` if the element has been seen in its current location
+        bool symbolSeen() const { return m_symbolSeen; }
+        bool symbolSeen(bool seen){ m_symbolSeen = seen; return m_symbolSeen; }
+
+
         //! Return X coordinate in world space
         int x() const { return m_x; }
         int x(int x){ m_x = x; return m_x; }
+
         //! Return Y coordinate in world space
         int y() const { return m_y; }
         int y(int y){ m_y = y; return m_y; }
+
         //! Return draw order depth of element
         int depth() const { return m_depth; }
         int depth(int newDepth){ m_depth = newDepth; return m_depth; }
@@ -46,14 +62,21 @@ class OnscreenElement{
     protected:
         //! Constructor
         OnscreenElement();
+
         //! Unique ID
         std::size_t m_id;
+
         //! On-screen representation
         char m_symbol;
+
+        //! Whether the symbol has been seen in its current location
+        bool m_symbolSeen;
+
         //@{
         /// World space coordinate
         int m_x, m_y;
         //@}
+
         //! Draw order depth
         int m_depth;
 

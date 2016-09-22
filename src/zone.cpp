@@ -256,9 +256,11 @@ void Zone::updateTopmostElementAt(int x, int y){
  * @param[in] flatCoordinates Flattened coordinates of location to update
  */
 void Zone::updateTopmostElementAt(int flatCoordinates){
-    OnscreenElement* element;
-    element = m_tiles[flatCoordinates]->topmostElement();
-    m_topmostElements[flatCoordinates] = element;
+    OnscreenElement* element = m_tiles[flatCoordinates]->topmostElement();
+    if(element != m_topmostElements[flatCoordinates]){
+        element->symbolSeen(false);
+        m_topmostElements[flatCoordinates] = element;
+    }
 }
 
 /**
