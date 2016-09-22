@@ -24,10 +24,10 @@ class Input{
         void removeAction(InputAction* action);
 
     private:
-        Input(){};
+        Input() : m_output(Output::getInstance()) {};
         ~Input(){};
-        std::map<char, std::set<InputAction*>> m_actions;
-        Output &m_output = Output::getInstance();
+        std::map<char, std::set<InputAction*> > m_actions;
+        Output &m_output;
 };
 
 #endif /* ifndef INPUT_H */
