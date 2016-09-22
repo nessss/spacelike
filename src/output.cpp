@@ -98,8 +98,8 @@ void Output::displayInventory(){
     int startY = options.gameWindowY;
     int startX = maxX - m_longestName - 2;
 
-    int endY = min(options.gameWindowY + options.gameWindowH, maxY);
-    int endX = maxX;
+    int endY = min(options.gameWindowY + options.gameWindowH, maxY - 1);
+    int endX = maxX - 1;
 
     wnoutrefresh(stdscr);
     pnoutrefresh(m_inventoryPad, 0, 0, startY, startX, endY, endX);
