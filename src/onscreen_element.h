@@ -24,6 +24,9 @@ class OnscreenElement{
         //! Return unique ID for this element
         std::size_t id() const { return m_id; }
 
+        //! Return class ID for .map files
+        const char* mapID() const { return m_mapID; }
+
         //! Return on-screen representation
         virtual char symbol() const { return m_symbol; }
         virtual char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
