@@ -17,7 +17,7 @@ class Door : public Tile{
         bool Close();
         bool Toggle();
 
-        virtual char getSymbol() const override;
+        virtual char getSymbol() override;
         virtual bool blocksMovement() const override;
 
     private:

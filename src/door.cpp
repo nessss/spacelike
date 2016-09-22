@@ -5,7 +5,7 @@ Door::Door(int x, int y, char openSymbol, char closedSymbol) :
     m_openSymbol(openSymbol), m_closedSymbol(closedSymbol),
     m_open(false) {}
 
-char Door::getSymbol() const {
+char Door::getSymbol(){
     m_symbolSeen = true;
     if(m_open){
         return m_openSymbol;
