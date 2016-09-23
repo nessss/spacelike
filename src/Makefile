@@ -14,38 +14,41 @@ OBJEXT    := o
 
 SOURCES   := $(shell find $(SRC) -type f -name '*.$(SRCEXT)')
 OBJECTS   := $(patsubst $(SRC)/%,$(BUILD)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+NAMES	  := $(notdir $(basename $(SOURCES)))
 
-UNAME := $(shell uname -a)
+UNAME := "$(shell uname -a)"
 
-ifneq (,$(findstring Cygwin, "$(UNAME)"))
+ifneq (,$(findstring Cygwin, $(UNAME)))
 	GUIDFLAGS = -DGUID_WINDOWS
 	LFLAGS += -lOle32
 endif
 
-ifneq (,$(findstring Darwin, "$(UNAME)"))
+ifneq (,$(findstring Darwin, $(UNAME)))
 	GUIDFLAGS = -DGUID_CFUUID
 	LFLAGS += -framework CoreFoundation
 endif
 
 all: directories $(TARGET)
 
+$(NAMES): % : $(BUILD)/%.$(OBJEXT) $(directories)
+
 test:
-	@echo "$(OBJECTS)"
+	@echo "$(NAMES)"
 
 directories:
-	mkdir -p $(BUILD)
-	mkdir -p $(BIN)
+	@mkdir -p $(BUILD)
+	@mkdir -p $(BIN)
 
 clean:
 	@-rm -rf ../build/*
 
-$(TARGET): $(OBJECTS)
+$(TARGET): $(directories) $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(BIN)/$(TARGET) $(LFLAGS)
 
 $(BUILD)/%.$(OBJEXT): $(SRC)/%.$(SRCEXT)
 	$(CC) $(CXXFLAGS) -c $< -o $@
 
-$(BUILD)/guid.o: directories $(SRC)/guid.cpp
+$(BUILD)/guid.o: $(directories) $(SRC)/guid.cpp
 	$(CC) $(CXXFLAGS) -c $(SRC)/guid.cpp -o ../build/guid.o $(GUIDFLAGS)
 
-.PHONY: all directories clean
+.PHONY: all directories clean $(NAMES)
