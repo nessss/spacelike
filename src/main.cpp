@@ -12,7 +12,6 @@
 #include "zone.h"
 #include "player.h"
 #include "tile.h"
-#include "floor_tile.h"
 #include "item.h"
 
 int main(int argc, char *argv[]){

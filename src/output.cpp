@@ -63,7 +63,9 @@ void Output::refreshGameWindow(){
     const Zone::ElementVector* elements = m_zone->topmostElements();
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
-        mvwaddch(m_gamePad, (*it)->y(), (*it)->x(), (*it)->symbol());
+        if(!(*it)->symbolSeen()){
+            mvwaddch(m_gamePad, (*it)->y(), (*it)->x(), (*it)->getSymbol());
+        }
     }
 
     wmove(m_gamePad, cursorY, cursorX); /* reset cursor */
@@ -98,8 +100,8 @@ void Output::displayInventory(){
     int startY = options.gameWindowY;
     int startX = maxX - m_longestName - 2;
 
-    int endY = min(options.gameWindowY + options.gameWindowH, maxY);
-    int endX = maxX;
+    int endY = min(options.gameWindowY + options.gameWindowH, maxY - 1);
+    int endX = maxX - 1;
 
     wnoutrefresh(stdscr);
     pnoutrefresh(m_inventoryPad, 0, 0, startY, startX, endY, endX);
@@ -107,6 +109,9 @@ void Output::displayInventory(){
     doupdate();
 
     getch();
+
+    wnoutrefresh(stdscr);
+    doupdate();
 }
 
 Zone* Output::zone(){

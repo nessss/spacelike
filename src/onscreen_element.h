@@ -16,20 +16,29 @@ class OnscreenElement{
     public:
         //! @return `true` if the element is visible
         virtual bool visible() = 0;
+
         //! @return `true` if the element location is known
         virtual bool known() = 0;
+
         //! @return `true` if the element successfully moved relative to its current location
         virtual bool move(int, int);
 
         //! Return unique ID for this element
         std::size_t id() const { return m_id; }
 
-        //! Return class ID for .map files
-        const char* mapID() const { return m_mapID; }
+        //! Peek at the symbol (don't set the m_symbolSeen flag)
+        virtual char peekSymbol() const { return m_symbol; }
 
-        //! Return on-screen representation
-        virtual char symbol() const { return m_symbol; }
+        //! Return on-screen representation and make symbolSeen() return `true` until moved
+        virtual char getSymbol() { m_symbolSeen = true; return m_symbol; }
+
+        //! Set the symbol
         virtual char symbol(char newSymbol){ m_symbol = newSymbol; return m_symbol; }
+
+        //! @retval bool `true` if the element has been seen in its current location
+        bool symbolSeen() const { return m_symbolSeen; }
+        bool symbolSeen(bool seen){ m_symbolSeen = seen; return m_symbolSeen; }
+
 
         //! Return X coordinate in world space
         int x() const { return m_x; }
@@ -49,6 +58,7 @@ class OnscreenElement{
         Tile* tile() const { return m_tile; } //!< Set current tile
         Tile* tile(Tile* tile){ m_tile = tile; return m_tile; } //!< Get current tile
 
+
     protected:
         //! Constructor
         OnscreenElement();
@@ -58,6 +68,9 @@ class OnscreenElement{
 
         //! On-screen representation
         char m_symbol;
+
+        //! Whether the symbol has been seen in its current location
+        bool m_symbolSeen;
 
         //@{
         /// World space coordinate
