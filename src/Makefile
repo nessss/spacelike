@@ -7,15 +7,17 @@ BUILDDIR  := ../build
 BINDIR    := ../bin
 DEPDIR    := .d
 
+$(shell mkdir -p $(BUILDDIR) $(BINDIR) $(DEPDIR) > /dev/null)
+
 SRCEXT    := cpp
 OBJEXT    := o
 DEPEXT    := d
 
-CXXFLAGS  := -g -std=c++11 -Wall -I $(INCDIR)
-LFLAGS    := -lncurses
-GUIDFLAGS := 
+CXXFLAGS   := -std=c++11 -Wall -I $(INCDIR)
+LFLAGS     := -lncurses
+EXTRAFLAGS := -g
 
-DEPFLAGS   = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+DEPFLAGS    = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
 .SUFFIXES: $(SRCEXT) $(OBJEXT) $(DEPEXT)
@@ -26,37 +28,24 @@ NAMES	  := $(notdir $(basename $(SOURCES)))
 
 UNAME := "$(shell uname -a)"
 
-ifneq (,$(findstring Cygwin, $(UNAME)))
-	GUIDFLAGS = -DGUID_WINDOWS
-	LFLAGS += -lOle32
-endif
+all: $(TARGET)
 
-ifneq (,$(findstring Darwin, $(UNAME)))
-	GUIDFLAGS = -DGUID_CFUUID
-	LFLAGS += -framework CoreFoundation
-endif
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(BINDIR)/$(TARGET) $(LFLAGS)
 
-all: directories $(TARGET)
+optimize:: EXTRAFLAGS := -O3
+optimize:: clean all
 
 $(NAMES): % : $(BUILDDIR)/%.$(OBJEXT) $(directories)
 
 test:
 	@echo "$(NAMES)"
 
-directories:
-	@mkdir -p $(BUILDDIR)
-	@mkdir -p $(BINDIR)
-	@mkdir -p $(DEPDIR)
-
 clean:
 	@-rm -rf ../build/*
-	@-rm -rf .d
-
-$(TARGET): $(directories) $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(BINDIR)/$(TARGET) $(LFLAGS)
 
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) $(DEPDIR)/%.d
-	$(CC) $(GUIDFLAGS) $(DEPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CC) $(DEPFLAGS) $(EXTRAFLAGS) $(CXXFLAGS) -c $< -o $@
 	$(POSTCOMPILE)
 
 $(DEPDIR)/%.d: ;

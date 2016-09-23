@@ -11,7 +11,6 @@
 
 #include "onscreen_element.h"
 #include "zone.h"
-#include "guid.h"
 #include "item.h"
 #include <curses.h>
 #include <set>

@@ -7,7 +7,6 @@
 
 #include <limits.h>
 #include <functional>
-#include "guid.h"
 
 class Zone;
 class Tile;
@@ -23,9 +22,6 @@ class OnscreenElement{
         //! @return `true` if the element successfully moved relative to its current location
         virtual bool move(int, int);
 
-        //! Return unique ID for this element
-        std::size_t id() const { return m_id; }
-
         //! Peek at the symbol (don't set the m_symbolSeen flag)
         virtual char peekSymbol() const { return m_symbol; }
 
@@ -38,7 +34,6 @@ class OnscreenElement{
         //! @retval bool `true` if the element has been seen in its current location
         bool symbolSeen() const { return m_symbolSeen; }
         bool symbolSeen(bool seen){ m_symbolSeen = seen; return m_symbolSeen; }
-
 
         //! Return X coordinate in world space
         int x() const { return m_x; }
@@ -58,13 +53,9 @@ class OnscreenElement{
         Tile* tile() const { return m_tile; } //!< Set current tile
         Tile* tile(Tile* tile){ m_tile = tile; return m_tile; } //!< Get current tile
 
-
     protected:
         //! Constructor
         OnscreenElement();
-
-        //! Unique ID
-        std::size_t m_id;
 
         //! On-screen representation
         char m_symbol;
@@ -82,86 +73,6 @@ class OnscreenElement{
 
         Zone* m_zone;
         Tile* m_tile;
-};
-
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is less than `rhs.id(),` `false` otherwise
- */ 
-inline bool operator<(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return lhs.id() < rhs.id();
-}
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is greater than `rhs.id(),` `false` otherwise
- */ 
-inline bool operator>(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return rhs < lhs;
-}
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is less than or equal to `rhs.id(),` `false` otherwise
- */ 
-inline bool operator<=(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return !(lhs > rhs);
-}
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is greater than or equal to `rhs.id(),` `false` otherwise
- */ 
-inline bool operator>=(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return !(lhs < rhs);
-}
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is equal to `rhs.id(),` `false` otherwise
- */ 
-inline bool operator==(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return lhs.id() == rhs.id();
-}
-
-/** 
- *  @param lhs an OnscreenElement
- *  @param rhs an OnscreenElement
- *  @return `true` if `lhs.id()` is not equal to `rhs.id(),` `false` otherwise
- */ 
-inline bool operator!=(
-        const OnscreenElement& lhs,
-        const OnscreenElement& rhs){
-    return !(lhs.id() == rhs.id());
-}
-
-//! Functor for ID comparison
-struct OnscreenElementPtrGuidComp{
-    /**
-     * @param[in] lhs, rhs OnscreenElements to be compared by `id()`
-     * @return `true` if `lhs.id()` is less than `rhs.id()`, `false` otherwise
-     */
-    bool operator()(
-            const OnscreenElement* lhs,
-            const OnscreenElement* rhs) const {
-        return *lhs < *rhs;
-    }
 };
 
 //! Functor for depth comparison
