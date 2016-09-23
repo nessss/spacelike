@@ -1,19 +1,27 @@
 CC   	  := g++
 TARGET 	  := spacelike
 
-CXXFLAGS  := -g -std=c++11 -Wall -I ../include/
+SRCDIR    := .
+INCDIR    := ../include
+BUILDDIR  := ../build
+BINDIR    := ../bin
+DEPDIR    := .d
+
+SRCEXT    := cpp
+OBJEXT    := o
+DEPEXT    := d
+
+CXXFLAGS  := -g -std=c++11 -Wall -I $(INCDIR)
 LFLAGS    := -lncurses
 GUIDFLAGS := 
 
-SRC       := .
-INCLUDE   := ../include
-BUILD 	  := ../build
-BIN       := ../bin
-SRCEXT    := cpp
-OBJEXT    := o
+DEPFLAGS   = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
-SOURCES   := $(shell find $(SRC) -type f -name '*.$(SRCEXT)')
-OBJECTS   := $(patsubst $(SRC)/%,$(BUILD)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+.SUFFIXES: $(SRCEXT) $(OBJEXT) $(DEPEXT)
+
+SOURCES   := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')
+OBJECTS   := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 NAMES	  := $(notdir $(basename $(SOURCES)))
 
 UNAME := "$(shell uname -a)"
@@ -30,25 +38,30 @@ endif
 
 all: directories $(TARGET)
 
-$(NAMES): % : $(BUILD)/%.$(OBJEXT) $(directories)
+$(NAMES): % : $(BUILDDIR)/%.$(OBJEXT) $(directories)
 
 test:
 	@echo "$(NAMES)"
 
 directories:
-	@mkdir -p $(BUILD)
-	@mkdir -p $(BIN)
+	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(BINDIR)
+	@mkdir -p $(DEPDIR)
 
 clean:
 	@-rm -rf ../build/*
+	@-rm -rf .d
 
 $(TARGET): $(directories) $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(BIN)/$(TARGET) $(LFLAGS)
+	$(CC) $(OBJECTS) -o $(BINDIR)/$(TARGET) $(LFLAGS)
 
-$(BUILD)/%.$(OBJEXT): $(SRC)/%.$(SRCEXT)
-	$(CC) $(CXXFLAGS) -c $< -o $@
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) $(DEPDIR)/%.d
+	$(CC) $(GUIDFLAGS) $(DEPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(POSTCOMPILE)
 
-$(BUILD)/guid.o: $(directories) $(SRC)/guid.cpp
-	$(CC) $(CXXFLAGS) -c $(SRC)/guid.cpp -o ../build/guid.o $(GUIDFLAGS)
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
 
 .PHONY: all directories clean $(NAMES)
+
+-include $(patsubst $(SRCDIR)/%,%,$(SOURCES:.$(SRCEXT)=.$(DEPEXT)))
