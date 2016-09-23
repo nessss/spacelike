@@ -6,7 +6,6 @@
 #define ZONE_H 
 
 #include "onscreen_element.h"
-#include "guid.h"
 #include "tile.h"
 #include <set>
 #include <unordered_set>

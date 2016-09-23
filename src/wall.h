@@ -1,6 +1,7 @@
 /**
  * An impassible wall.
  */
+#include "tile.h"
 
 #include "tile.h"
 

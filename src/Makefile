@@ -1,51 +1,56 @@
 CC   	  := g++
 TARGET 	  := spacelike
 
-CXXFLAGS  := -g -std=c++11 -Wall -I ../include/
-LFLAGS    := -lncurses
-GUIDFLAGS := 
+SRCDIR    := .
+INCDIR    := ../include
+BUILDDIR  := ../build
+BINDIR    := ../bin
+DEPDIR    := .d
 
-SRC       := .
-INCLUDE   := ../include
-BUILD 	  := ../build
-BIN       := ../bin
+$(shell mkdir -p $(BUILDDIR) $(BINDIR) $(DEPDIR) > /dev/null)
+
 SRCEXT    := cpp
 OBJEXT    := o
+DEPEXT    := d
 
-SOURCES   := $(shell find $(SRC) -type f -name '*.$(SRCEXT)')
-OBJECTS   := $(patsubst $(SRC)/%,$(BUILD)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+CXXFLAGS   := -std=c++11 -Wall -I $(INCDIR)
+LFLAGS     := -lncurses
+EXTRAFLAGS := -g
 
-UNAME := $(shell uname -a)
+DEPFLAGS    = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
-ifneq (,$(findstring Cygwin, "$(UNAME)"))
-	GUIDFLAGS = -DGUID_WINDOWS
-	LFLAGS += -lOle32
-endif
+.SUFFIXES: $(SRCEXT) $(OBJEXT) $(DEPEXT)
 
-ifneq (,$(findstring Darwin, "$(UNAME)"))
-	GUIDFLAGS = -DGUID_CFUUID
-	LFLAGS += -framework CoreFoundation
-endif
+SOURCES   := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')
+OBJECTS   := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+NAMES	  := $(notdir $(basename $(SOURCES)))
 
-all: directories $(TARGET)
+UNAME := "$(shell uname -a)"
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(BINDIR)/$(TARGET) $(LFLAGS)
+
+optimize:: EXTRAFLAGS := -O3
+optimize:: clean all
+
+$(NAMES): % : $(BUILDDIR)/%.$(OBJEXT) $(directories)
 
 test:
-	@echo "$(OBJECTS)"
-
-directories:
-	mkdir -p $(BUILD)
-	mkdir -p $(BIN)
+	@echo "$(NAMES)"
 
 clean:
 	@-rm -rf ../build/*
 
-$(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(BIN)/$(TARGET) $(LFLAGS)
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) $(DEPDIR)/%.d
+	$(CC) $(DEPFLAGS) $(EXTRAFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(POSTCOMPILE)
 
-$(BUILD)/%.$(OBJEXT): $(SRC)/%.$(SRCEXT)
-	$(CC) $(CXXFLAGS) -c $< -o $@
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
 
-$(BUILD)/guid.o: directories $(SRC)/guid.cpp
-	$(CC) $(CXXFLAGS) -c $(SRC)/guid.cpp -o ../build/guid.o $(GUIDFLAGS)
+.PHONY: all directories clean $(NAMES)
 
-.PHONY: all directories clean
+-include $(patsubst $(SRCDIR)/%,%,$(SOURCES:.$(SRCEXT)=.$(DEPEXT)))
