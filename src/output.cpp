@@ -9,7 +9,9 @@ Output::Output(){
     /* init curses */
     signal(SIGINT, Application::finish);  /* arrange interrupts to terminate */
 
-    initscr();               /* initialize curses library */
+    SCREEN* terminal = newterm((char*)"xterm-256color", stdout, stdin);
+    set_term(terminal);
+    //initscr();               /* initialize curses library */
     keypad(stdscr, TRUE);           /* enable keyboard mapping */
     nonl();                  /* tell curses not to do NL->CR/NL on output */
     cbreak();                /* take input chars one at a time, no wait for \n */
