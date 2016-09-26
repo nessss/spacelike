@@ -14,7 +14,6 @@
 #include "item.h"
 #include <curses.h>
 #include <set>
-#include <vector>
 
 struct OutputOptions{
     int gameWindowW;

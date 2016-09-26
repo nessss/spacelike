@@ -7,6 +7,7 @@
 
 #include <limits.h>
 #include <functional>
+#include "output_attribute.h"
 
 class Zone;
 class Tile;
@@ -47,6 +48,9 @@ class OnscreenElement{
         int depth() const { return m_depth; }
         int depth(int newDepth){ m_depth = newDepth; return m_depth; }
 
+        const char* attribute() const { return m_attribute; }
+        const char* attribute(const char* attribute){ m_attribute = attribute; return m_attribute; }
+
         Zone* zone() const { return m_zone; } //!< Get current zone
         Zone* zone(Zone* zone){ m_zone = zone; return m_zone; } //!< Set current zone
         
@@ -70,6 +74,9 @@ class OnscreenElement{
 
         //! Draw order depth
         int m_depth;
+
+        //! symbol attribute
+        const char* m_attribute;
 
         Zone* m_zone;
         Tile* m_tile;
