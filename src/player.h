@@ -19,12 +19,14 @@ class Player : public Actor {
     public:
         Player();
         Player(int, int, char symbol = '@', int depth = 0);
+        ~Player();
         bool visible();
         bool known();
         bool move(int, int);
         bool take();
     private:
         void registerActions();
+        void deregisterActions();
         std::vector<PlayerInputAction> m_actions;
         std::set<Item*> m_inventory;
 };

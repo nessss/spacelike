@@ -7,6 +7,10 @@ Player::Player(int x, int y, char symbol, int depth) :
 
 Player::Player() : Player(0, 0){}
 
+Player::~Player(){
+    deregisterActions();
+}
+
 bool Player::visible(){
     /* player is always visible to themself */
     return true; 
@@ -56,6 +60,13 @@ void Player::registerActions(){
     Input& input = Input::getInstance();
     for(auto it = m_actions.begin(); it != m_actions.end(); ++it){
         input.addAction(&(*it));
+    }
+}
+
+void Player::deregisterActions(){
+    Input& input = Input::getInstance();
+    for(auto it = m_actions.begin(); it != m_actions.end(); ++it){
+        input.removeAction(&(*it));
     }
 }
 
