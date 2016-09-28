@@ -1,11 +1,9 @@
 #include "item.h"
 
-Item::Item(string name, string description){
-    m_name = name;
-    m_description = description;
-    m_depth = 10;
-    m_symbol = '%';
-}
+Item::Item(string name, string description) : 
+    OnscreenElement(0, 0, '%', 10, OutputAttribute::normal),
+    m_name(name),
+    m_description(description) {}
 
 bool Item::visible(){
     // TODO: implement

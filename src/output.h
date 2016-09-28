@@ -12,7 +12,7 @@
 #include "onscreen_element.h"
 #include "zone.h"
 #include "item.h"
-#include <ncursesw.h>
+#include <ncurses.h>
 #include <set>
 
 struct OutputOptions{

@@ -1,13 +1,12 @@
 #include "onscreen_element.h"
 #include "zone.h"
 
-OnscreenElement::OnscreenElement(){
-    m_symbol = ' ';
-    m_x = 0;
-    m_y = 0;
-    m_depth = INT_MAX;
-    m_symbolSeen = false;
-}
+OnscreenElement::OnscreenElement(int x, int y, char symbol, int depth, unsigned int attr) :
+    m_x(x), m_y(y),
+    m_symbol(symbol),
+    m_symbolSeen(false),
+    m_depth(depth),
+    m_attribute(attr) {}
 
 bool OnscreenElement::move(int deltaX, int deltaY){
     if(m_zone == NULL){

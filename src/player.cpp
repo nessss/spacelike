@@ -1,13 +1,7 @@
 #include "player.h"
 
-Player::Player(int x, int y, char symbol, int depth){
-    m_x = x;
-    m_y = y;
-    m_symbol = symbol;
-    m_depth = depth;
-
-    registerActions();
-}
+Player::Player(int x, int y, char symbol, int depth) : 
+    Actor(x, y, symbol, depth, OutputAttribute::standout) {}
 
 Player::Player() : Player(0, 0){}
 

@@ -53,7 +53,10 @@ void Output::refreshGameWindow(){
 
     for(auto it = elements->cbegin(); it < elements->cend(); ++it){
         if(!(*it)->symbolSeen()){
-            mvwaddch(m_gamePad, (*it)->y(), (*it)->x(), (*it)->getSymbol());
+            mvwaddch(
+                    m_gamePad,
+                    (*it)->y(), (*it)->x(),
+                    (*it)->getSymbol() | (*it)->attribute());
         }
     }
 

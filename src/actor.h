@@ -15,7 +15,8 @@ class Actor : public OnscreenElement{
         int hp(int hp){ m_hp = hp; return hp; } //!< Set current health points
 
     protected:
-        Actor(){} //!< Constructor
+        Actor(int x, int y, char symbol, int depth, unsigned int attr) : 
+            OnscreenElement(x, y, symbol, depth, attr) {}
         int m_hp; //!< Health points
 
 };

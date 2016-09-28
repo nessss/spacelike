@@ -16,10 +16,12 @@
 
 int main(int argc, char *argv[]){
 
+    Input& input = Input::getInstance();
+
     Player player(1, 1);
     player.symbol('@');
+    player.registerActions();
 
-    Input& input = Input::getInstance();
 
     OutputOptions options;
     options.gameWindowW = 40;

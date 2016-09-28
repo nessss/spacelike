@@ -1,12 +1,9 @@
 #include "tile.h"
 
-Tile::Tile(int x, int y, char symbol){
-    m_x = x;
-    m_y = y;
-    m_symbol = symbol;
-    m_topmostElement = this;
-    m_blocksMovement = false;
-}
+Tile::Tile(int x, int y, char symbol) : 
+    OnscreenElement(x, y, symbol, INT_MAX, OutputAttribute::normal),
+    m_topmostElement(this),
+    m_blocksMovement(false) {}
 
 OnscreenElement* Tile::topmostElement(){
     return m_topmostElement;
