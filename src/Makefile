@@ -14,7 +14,7 @@ OBJEXT    := o
 DEPEXT    := d
 
 CXXFLAGS   := -std=c++11 -Wall -I $(INCDIR)
-LFLAGS     := -lncurses
+LFLAGS     := -lncursesw
 EXTRAFLAGS := -g
 
 DEPFLAGS    = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
