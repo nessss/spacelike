@@ -1,17 +1,21 @@
 /* Attribute for output
  */
 
+#ifndef OUTPUT_ATTRIBUTE_H
+#define OUTPUT_ATTRIBUTE_H 
+
 namespace OutputAttribute{
-    const char* normal      = "A_NORMAL";
-    const char* standout    = "A_STANDOUT";
-    const char* underline   = "A_UNDERLINE";
-    const char* reverse     = "A_REVERSE";
-    const char* blink       = "A_BLINK";
-    const char* dim         = "A_DIM";
-    const char* bold        = "A_BOLD";
-    const char* protect     = "A_PROTECT";
-    const char* invis       = "A_INVIS";
-    const char* altCharSet  = "A_ALTCHARSET";
-    const char* charText    = "A_CHARTEXT";
+    extern const char* normal;
+    extern const char* standout;
+    extern const char* underline;
+    extern const char* reverse;
+    extern const char* blink;
+    extern const char* dim;
+    extern const char* bold;
+    extern const char* protect;
+    extern const char* invis;
+    extern const char* altCharSet;
+    extern const char* charText;
 }
 
+#endif /* ifndef OUTPUT_ATTRIBUTE_H */
