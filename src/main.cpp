@@ -20,8 +20,6 @@ int main(int argc, char *argv[]){
 
     Player player(1, 1);
     player.symbol('@');
-    player.registerActions();
-
 
     OutputOptions options;
     options.gameWindowW = 40;

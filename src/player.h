@@ -23,8 +23,8 @@ class Player : public Actor {
         bool known();
         bool move(int, int);
         bool take();
-        void registerActions();
     private:
+        void registerActions();
         std::vector<PlayerInputAction> m_actions;
         std::set<Item*> m_inventory;
 };

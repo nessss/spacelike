@@ -1,7 +1,9 @@
 #include "player.h"
 
 Player::Player(int x, int y, char symbol, int depth) : 
-    Actor(x, y, symbol, depth, OutputAttribute::standout) {}
+    Actor(x, y, symbol, depth, OutputAttribute::standout){
+        registerActions();
+    }
 
 Player::Player() : Player(0, 0){}
 
