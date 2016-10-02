@@ -238,6 +238,7 @@ void Zone::loadMap(const char* path){
  ******************************************/
 
 unsigned int Zone::resize(unsigned int w, unsigned int h){
+
     m_w = w;
     m_h = h;
 
@@ -264,7 +265,7 @@ unsigned int Zone::resize(unsigned int w, unsigned int h){
  * @param[in] y Y component of coordinates to be flattened
  * @retval int Flattened coordinates 
  */
-unsigned int Zone::flattenCoordinates(unsigned int x, unsigned int y){
+inline unsigned int Zone::flattenCoordinates(unsigned int x, unsigned int y){
     return x + (y * m_w);
 }
 
@@ -273,7 +274,7 @@ unsigned int Zone::flattenCoordinates(unsigned int x, unsigned int y){
  * @param[in] element* Pointer to element whose flattened coordinates should be returned
  * @retval int Flattened coordinates of element
  */
-unsigned int Zone::flattenCoordinates(const OnscreenElement* element){
+inline unsigned int Zone::flattenCoordinates(const OnscreenElement* element){
     return flattenCoordinates(element->x(), element->y());
 }
 

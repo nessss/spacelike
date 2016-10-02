@@ -45,8 +45,8 @@ class Zone{
     private:
         unsigned int resize(unsigned int w, unsigned int h);
 
-        unsigned int flattenCoordinates(unsigned int x, unsigned int y);
-        unsigned int flattenCoordinates(const OnscreenElement* element);
+        inline unsigned int flattenCoordinates(unsigned int x, unsigned int y);
+        inline unsigned int flattenCoordinates(const OnscreenElement* element);
 
         unsigned int m_w, m_h;
         ElementSet m_elementSet;
