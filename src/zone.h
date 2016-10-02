@@ -16,45 +16,41 @@ class Zone{
     public:
         typedef std::vector<OnscreenElement*> ElementVector;
         typedef std::unordered_set<OnscreenElement*> ElementSet;
-        typedef std::set<OnscreenElement*, OnscreenElementPtrDepthComp> ElementDepthSet;
-        typedef std::vector<ElementDepthSet> ElementDepthSetVector;
 
+        Zone(unsigned int w, unsigned int h);
         Zone(int w, int h);
 
-        int w();
-        int w(int w);
+        unsigned int w();
+        unsigned int w(unsigned int w);
+        unsigned int w(int w);
 
-        int h();
-        int h(int h);
+        unsigned int h();
+        unsigned int h(unsigned int h);
+        unsigned int h(int h);
 
-        Tile* tile(int xy);
+        Tile* tile(unsigned int xy);
+        Tile* tile(unsigned int x, unsigned int y);
         Tile* tile(int x, int y);
         Tile* tile(OnscreenElement* element);
+
+        std::vector<Tile*> tiles() const;
 
         bool elementRegistered(OnscreenElement *element);
         bool addElement(OnscreenElement *element);
         bool removeElement(OnscreenElement *element);
         bool moveElement(OnscreenElement *element, int x, int y);
 
-        OnscreenElement* topmostElementAt(int x, int y);
-
-        const ElementVector* topmostElements() const;
-
         void loadMap(const char* path);
 
     private:
-        int flattenCoordinates(int x, int y);
-        int flattenCoordinates(const OnscreenElement* element);
+        unsigned int resize(unsigned int w, unsigned int h);
 
-        void updateTopmostElements();
-        void updateTopmostElementAt(int x, int y);
-        void updateTopmostElementAt(int flatCoordinates);
-        void updateTopmostElementAt(OnscreenElement* element);
+        unsigned int flattenCoordinates(unsigned int x, unsigned int y);
+        unsigned int flattenCoordinates(const OnscreenElement* element);
 
-        int m_w, m_h;
+        unsigned int m_w, m_h;
         ElementSet m_elementSet;
         std::vector<Tile*> m_tiles;
-        ElementVector m_topmostElements;
 };
 
 #endif /* ifndef ZONE_H */

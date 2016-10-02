@@ -29,6 +29,7 @@ class Tile : public OnscreenElement{
 
         bool visible(){ return true; }
         bool known(){ return true; }
+
     private:
         std::set<OnscreenElement*> m_elements;
         OnscreenElement* m_topmostElement;

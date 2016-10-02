@@ -49,14 +49,15 @@ void Output::refreshGameWindow(){
     int cursorY, cursorX; /* save cursor position */
     getyx(m_gamePad, cursorY, cursorX);
 
-    const Zone::ElementVector* elements = m_zone->topmostElements();
+    std::vector<Tile*> tiles = m_zone->tiles();
 
-    for(auto it = elements->cbegin(); it < elements->cend(); ++it){
-        if(!(*it)->symbolSeen()){
+    for(auto it = tiles.cbegin(); it < tiles.cend(); ++it){
+        OnscreenElement* element = (*it)->topmostElement();
+        if(!element->symbolSeen()){
             mvwaddch(
                     m_gamePad,
-                    (*it)->y(), (*it)->x(),
-                    (*it)->getSymbol() | (*it)->attribute());
+                    element->y(), element->x(),
+                    element->getSymbol() | element->attribute());
         }
     }
 

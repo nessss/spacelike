@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdexcept>
 #include "zone.h"
 #include "rapidxml.hpp"
 
@@ -8,24 +9,22 @@
  * @param[in] w Width of the zone
  * @param[in] h Height of the zone
  */
-Zone::Zone(int w, int h){
-    m_w = w;
-    m_h = h;
 
-    m_topmostElements.assign(m_w * m_h, NULL);
-    m_tiles.assign(m_w * m_h, NULL);
-    for(int x = 0; x < m_w; ++x){
-        for(int y = 0; y < m_h; ++y){
-            int idx = flattenCoordinates(x, y);
-            if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
-                m_tiles[idx] = new Tile(x, y, '#');
-                m_tiles[idx]->blocksMovement(true);
-            }else{
-                m_tiles[idx] = new Tile(x, y);
-            }
-        }
-    }
-    updateTopmostElements();
+Zone::Zone(unsigned int w, unsigned int h){
+
+    if(w == 0) throw std::invalid_argument("Zone::Zone(unsigned int w, unsigned int h) w == 0");
+    if(h == 0) throw std::invalid_argument("Zone::Zone(unsigned int w, unsigned int h) h == 0");
+
+    resize(w, h);
+
+}
+
+Zone::Zone(int w, int h){
+
+    if(w <= 0) throw std::invalid_argument("Zone::Zone(int w, int h): w <= 0");
+    if(h <= 0) throw std::invalid_argument("Zone::Zone(int w, int h): h <= 0");
+
+    resize((int)w, (int)h);
 }
 
 /**
@@ -33,7 +32,7 @@ Zone::Zone(int w, int h){
  * @details The number of columns.
  * @retval int Width of the zone
  */
-int Zone::w(){
+unsigned int Zone::w(){
     return m_w;
 }
 
@@ -42,10 +41,16 @@ int Zone::w(){
  * @copydetails Zone::w()
  * @retval int New width of the zone
  */
-int Zone::w(int w){
+unsigned int Zone::w(unsigned int w){
     // TODO: make this not break everything
+    if(w == 0) throw std::invalid_argument("Zone::w(unsigned int w) w == 0");
     m_w = w;
     return m_w;
+}
+
+unsigned int Zone::w(int w){
+    if(w <= 0) throw std::invalid_argument("Zone::w(int w): w <= 0");
+    return this->w((unsigned int)w);
 }
 
 /**
@@ -53,7 +58,7 @@ int Zone::w(int w){
  * @details The number of rows.
  * @retval int Height of the zone
  */
-int Zone::h(){
+unsigned int Zone::h(){
     return m_h;
 }
 
@@ -62,22 +67,46 @@ int Zone::h(){
  * @copydetails Zone::h()
  * @retval int New height of the zone
  */
-int Zone::h(int h){
+unsigned int Zone::h(unsigned int h){
     // TODO: make this not break everything
+    if(h == 0) throw std::invalid_argument("Zone::h(unsigned int h) h == 0");
     m_h = h;
     return m_h;
 }
 
-Tile* Zone::tile(int xy){
+unsigned int Zone::h(int h){
+    if(h <= 0) throw std::invalid_argument("Zone::h(unsigned int h) h <= 0");
+    return this->h((unsigned int)h);
+}
+
+Tile* Zone::tile(unsigned int xy){
+    if(xy >= m_w * m_h) throw std::out_of_range("Zone::tile(int xy) argument out of range");
     return m_tiles[xy];
 }
 
-Tile* Zone::tile(int x, int y){
+Tile* Zone::tile(unsigned int x, unsigned int y){
+    if(x >= m_w) throw std::out_of_range("Zone::tile(unsigned int x, unsigned int y): x >= width");
+    if(y >= m_h) throw std::out_of_range("Zone::tile(unsigned int x, unsigned int y): y >= height");
     return tile(flattenCoordinates(x, y));
+}
+
+Tile* Zone::tile(int x, int y){
+    if(x < 0)    throw std::out_of_range("Zone:tile(int x, int y) x < 0");
+    if(x >= m_w) throw std::out_of_range("Zone:tile(int x, int y) x > w");
+    if(y < 0)    throw std::out_of_range("Zone:tile(int x, int y) y < 0");
+    if(y >= m_h) throw std::out_of_range("Zone:tile(int x, int y) y > h");
+    if(x < 0 || y < 0){
+        throw std::out_of_range("Zone::tile");
+    }
+    return tile((unsigned int)x, (unsigned int)y);
 }
 
 Tile* Zone::tile(OnscreenElement* element){
     return tile(flattenCoordinates(element));
+}
+
+std::vector<Tile*> Zone::tiles() const {
+    return m_tiles;
 }
 
 /**
@@ -101,10 +130,9 @@ bool Zone::addElement(OnscreenElement *element){
     if(!elementRegistered(element)){
         m_elementSet.insert(element);
 
-        int idx = flattenCoordinates(element);
+        unsigned int idx = flattenCoordinates(element);
         m_tiles[idx]->addElement(element);
 
-        updateTopmostElementAt(idx);
         element->zone(this);
 
         return true;
@@ -122,6 +150,7 @@ bool Zone::removeElement(OnscreenElement *element){
     if(elementRegistered(element)){
         m_tiles[flattenCoordinates(element)]->removeElement(element);
         m_elementSet.erase(element);
+        element->zone(NULL);
 
         return true;
     }
@@ -137,29 +166,22 @@ bool Zone::removeElement(OnscreenElement *element){
  */
 bool Zone::moveElement(OnscreenElement *element, int deltaX, int deltaY){
     if(elementRegistered(element)){
-        int oldX = element->x();
-        int oldY = element->y();
-        int newX = element->x() + deltaX;
-        int newY = element->y() + deltaY;
-        if(newX < 0 || newX >= w()){ return false; }
-        if(newY < 0 || newY >= h()){ return false; }
+        unsigned int oldX = element->x();
+        unsigned int oldY = element->y();
+
+        if((int)oldX + deltaX < 0 || (int)oldX + deltaX >= w()){ return false; }
+        if((int)oldY + deltaY < 0 || (int)oldY + deltaY >= h()){ return false; }
+
+        unsigned int newX = element->x() + deltaX;
+        unsigned int newY = element->y() + deltaY;
+
         m_tiles[flattenCoordinates(element)]->moveElement(
                 element, m_tiles[flattenCoordinates(newX, newY)]);
         element->x(newX);
         element->y(newY);
-        updateTopmostElementAt(oldX, oldY);
-        updateTopmostElementAt(element);
         return true;
     }
     return false;
-}
-
-/**
- * Get a pointer to the vector of topmost elements for each coordinate
- * @retval std::vector<OnscreenElement*>* Pointer to the vector of pointers to topmost elements in the zone
- */
-const Zone::ElementVector* Zone::topmostElements() const {
-    return &m_topmostElements;
 }
 
 /**
@@ -215,12 +237,32 @@ void Zone::loadMap(const char* path){
  *
  ******************************************/
 
+unsigned int Zone::resize(unsigned int w, unsigned int h){
+    m_w = w;
+    m_h = h;
+
+    m_tiles.assign(m_w * m_h, NULL);
+    for(unsigned int x = 0; x < m_w; ++x){
+        for(unsigned int y = 0; y < m_h; ++y){
+            unsigned int idx = flattenCoordinates(x, y);
+            if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
+                m_tiles[idx] = new Tile(x, y, '#');
+                m_tiles[idx]->blocksMovement(true);
+            }else{
+                m_tiles[idx] = new Tile(x, y);
+            }
+        }
+    }
+
+    return m_w * m_h;
+}
+
 /** Get "flattened" one-dimensional representation of coordinates
  * @param[in] x X component of coordinates to be flattened
  * @param[in] y Y component of coordinates to be flattened
  * @retval int Flattened coordinates 
  */
-int Zone::flattenCoordinates(int x, int y){
+unsigned int Zone::flattenCoordinates(unsigned int x, unsigned int y){
     return x + (y * m_w);
 }
 
@@ -229,56 +271,8 @@ int Zone::flattenCoordinates(int x, int y){
  * @param[in] element* Pointer to element whose flattened coordinates should be returned
  * @retval int Flattened coordinates of element
  */
-int Zone::flattenCoordinates(const OnscreenElement* element){
+unsigned int Zone::flattenCoordinates(const OnscreenElement* element){
     return flattenCoordinates(element->x(), element->y());
-}
-
-/**
- * Update the internal vector of topmost elements.
- */
-void Zone::updateTopmostElements(){
-    for(int i=0; i < m_w*m_h; ++i){
-        updateTopmostElementAt(i);
-    }
-}
-
-/**
- * Update the topmost element at specific coordinates
- * @param[in] x X coordinate of location to update
- * @param[in] y Y coordinate of location to update
- */
-void Zone::updateTopmostElementAt(int x, int y){
-    updateTopmostElementAt(flattenCoordinates(x, y));
-}
-
-/**
- * @copybrief Zone::updateTopmostElementAt(int,int)
- * @param[in] flatCoordinates Flattened coordinates of location to update
- */
-void Zone::updateTopmostElementAt(int flatCoordinates){
-    OnscreenElement* element = m_tiles[flatCoordinates]->topmostElement();
-    if(element != m_topmostElements[flatCoordinates]){
-        element->symbolSeen(false);
-        m_topmostElements[flatCoordinates] = element;
-    }
-}
-
-/**
- * @copybrief Zone::updateTopmostElementAt(int,int)
- * @param[in] element* Pointer to element whose location's topmost element should be updated
- */
-void Zone::updateTopmostElementAt(OnscreenElement* element){
-    updateTopmostElementAt(flattenCoordinates(element));
-}
-
-/**
- * Get a pointer to the topmost element at specific coordinates
- * @param[in] x X component of coordinates
- * @param[in] y Y component of coordinates
- * @retval OnscreenElement* Pointer to topmost element at `x, y`
- */
-OnscreenElement* Zone::topmostElementAt(int x, int y){
-    return m_topmostElements[flattenCoordinates(x, y)];
 }
 
 /**
@@ -289,14 +283,4 @@ OnscreenElement* Zone::topmostElementAt(int x, int y){
 /**
  * @typedef std::unordered_set<OnscreenElement*> Zone::ElementSet
  * An id-ordered std::set of OnscreenElements*
- */
-
-/**
- * @typedef std::set<OnscreenElement*, OnscreenElementPtrDepthComp> Zone::ElementDepthSet
- * A depth-ordered std::set of OnscreenElements*
- */
-
-/**
- * @typedef std::vector<ElementDepthSet> Zone::ElementDepthSetVector;
- * An std::vector of ElementDepthSet
  */

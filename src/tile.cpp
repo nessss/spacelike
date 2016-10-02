@@ -42,12 +42,14 @@ bool Tile::removeElement(OnscreenElement* element){
         if(element == m_topmostElement){
             if(m_elements.size() == 0){
                 m_topmostElement = this;
+                symbolSeen(false);
                 return true;
             }
             m_topmostElement = *(m_elements.begin());
             for(auto it = m_elements.begin(); it != m_elements.end(); ++it){
                 if((*it)->depth() > m_topmostElement->depth()){
                     m_topmostElement = *it;
+                    (*it)->symbolSeen(false);
                 }
             }
         }
