@@ -28,9 +28,13 @@ OBJECTS    := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEX
 INCLUDES   := $(patsubst $(SRCDIR)/%,$(DEPDIR)/%,$(SOURCES:.$(SRCEXT)=.$(DEPEXT)))
 NAMES	   := $(notdir $(basename $(SOURCES)))
 
+
 UNAME := "$(shell uname -a)"
 
-all: $(TARGET)
+all: $(TARGET) test
+
+test:
+	@-cd ../test && $(MAKE)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(BINDIR)/$(TARGET) $(LFLAGS)
@@ -38,10 +42,7 @@ $(TARGET): $(OBJECTS)
 optimize:: EXTRAFLAGS := -O3
 optimize:: clean all
 
-$(NAMES): % : $(BUILDDIR)/%.$(OBJEXT) $(directories)
-
-test:
-	@echo "$(NAMES)"
+$(NAMES): % : $(BUILDDIR)/%.$(OBJEXT)
 
 clean:
 	@-rm -rf ../build/*
@@ -55,6 +56,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) $(DEPDIR)/%.d
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
-.PHONY: all directories clean $(NAMES)
+.PHONY: all clean $(NAMES)
 
 -include $(INCLUDES)
