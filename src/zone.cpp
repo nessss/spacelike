@@ -241,15 +241,17 @@ unsigned int Zone::resize(unsigned int w, unsigned int h){
     m_w = w;
     m_h = h;
 
-    m_tiles.assign(m_w * m_h, NULL);
-    for(unsigned int x = 0; x < m_w; ++x){
-        for(unsigned int y = 0; y < m_h; ++y){
-            unsigned int idx = flattenCoordinates(x, y);
-            if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
-                m_tiles[idx] = new Tile(x, y, '#');
-                m_tiles[idx]->blocksMovement(true);
-            }else{
-                m_tiles[idx] = new Tile(x, y);
+    if(m_tiles.size() == 0){
+        m_tiles.assign(m_w * m_h, NULL);
+        for(int x = 0; x < m_w; ++x){
+            for(int y = 0; y < m_h; ++y){
+                unsigned int idx = flattenCoordinates(x, y);
+                if(x == 0 || x == m_w - 1 || y == 0 || y == m_h -1){
+                    m_tiles[idx] = new Tile(x, y, '#');
+                    m_tiles[idx]->blocksMovement(true);
+                }else{
+                    m_tiles[idx] = new Tile(x, y);
+                }
             }
         }
     }
