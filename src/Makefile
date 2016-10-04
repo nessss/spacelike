@@ -56,6 +56,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) $(DEPDIR)/%.d
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
-.PHONY: all clean $(NAMES)
+.PHONY: all clean test $(NAMES)
 
 -include $(INCLUDES)

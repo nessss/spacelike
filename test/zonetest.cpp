@@ -19,6 +19,11 @@ TEST_CASE( "Zone is constructed", "[ZoneConstructor]" ) {
         REQUIRE( zone.tile(1, 1)->peekSymbol() == '.' );
         REQUIRE( zone.tile(1, 1)->blocksMovement() == false );
     }
+
+    SECTION( "Large sizes of Zone are constructed quickly" ) {
+
+        Zone zone(4096, 4096);
+    }
 }
 
 TEST_CASE( "Zone exceptions are thrown", "[ZoneExceptions]" ) {

@@ -10,7 +10,7 @@
  * @param[in] h Height of the zone
  */
 
-Zone::Zone(unsigned int w, unsigned int h){
+Zone::Zone(unsigned int w, unsigned int h) : m_w(w), m_h(h) {
 
     if(w == 0) throw std::invalid_argument("Zone::Zone(unsigned int w, unsigned int h) w == 0");
     if(h == 0) throw std::invalid_argument("Zone::Zone(unsigned int w, unsigned int h) h == 0");
@@ -19,12 +19,12 @@ Zone::Zone(unsigned int w, unsigned int h){
 
 }
 
-Zone::Zone(int w, int h){
+Zone::Zone(int w, int h) : m_w(w), m_h(h){
 
     if(w <= 0) throw std::invalid_argument("Zone::Zone(int w, int h): w <= 0");
     if(h <= 0) throw std::invalid_argument("Zone::Zone(int w, int h): h <= 0");
 
-    resize((int)w, (int)h);
+    resize(w, h);
 }
 
 /**
