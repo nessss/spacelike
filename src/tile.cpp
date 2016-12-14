@@ -9,7 +9,7 @@ OnscreenElement* Tile::topmostElement(){
     return m_topmostElement;
 }
 
-bool Tile::hasElement(OnscreenElement* element){
+bool Tile::hasElement( OnscreenElement* element ){
     if(m_elements.count(element) == 1){
         return true;
     }
@@ -20,11 +20,11 @@ const std::set<OnscreenElement*> Tile::elements(){
     return m_elements;
 }
 
-bool Tile::addElement(OnscreenElement* element){
+bool Tile::addElement( OnscreenElement* element ){
+
     if(hasElement(element)){
         return false;
     }
-
 
     m_elements.insert(element);
 
@@ -33,6 +33,13 @@ bool Tile::addElement(OnscreenElement* element){
     if(m_topmostElement == this || element->depth() < m_topmostElement->depth()){
         m_topmostElement = element;
     }
+
+    Item* item = dynamic_cast<Item*>( element );
+    if( item != NULL )
+    {
+        m_items.insert( item );
+    }
+
     return true;
 }
 
@@ -65,6 +72,11 @@ bool Tile::moveElement(OnscreenElement* element, Tile* other){
         return true;
     }
     return false;
+}
+
+const std::set<Item*> Tile::items()
+{
+    return m_items;
 }
 
 bool Tile::blocksMovement() const {

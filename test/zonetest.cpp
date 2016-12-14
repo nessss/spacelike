@@ -21,7 +21,6 @@ TEST_CASE( "Zone is constructed", "[ZoneConstructor]" ) {
     }
 
     SECTION( "Large sizes of Zone are constructed quickly" ) {
-
         Zone zone(4096, 4096);
     }
 }
