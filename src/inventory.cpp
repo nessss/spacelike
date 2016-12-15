@@ -24,20 +24,11 @@ const Item* Inventory::operator[]( char key ) const
 
 bool Inventory::hasItem( Item* item )
 {
-    for( auto pair = m_items.begin(); pair != m_items.end(); ++pair )
-    {
-        if( pair->second == item )
-            return true;
-    }
-
-    return false;
+    return key( item ) != NO_KEY;
 }
 
 char Inventory::key( Item* item )
 {
-    if( !hasItem( item ) )
-        return NO_KEY;
-
     for( auto pair = m_items.begin(); pair != m_items.end(); ++pair )
     {
         if( pair->second == item )
@@ -94,6 +85,9 @@ bool Inventory::changeKey( char oldKey, char newKey )
     if( m_items.count( oldKey ) == 0 )
         return false;
 
+    if( m_keySet.count( newKey ) == 0 )
+        return false;
+
     Item* oldKeyItem = m_items[ oldKey ];
     removeItem( oldKey );
 
@@ -111,11 +105,7 @@ bool Inventory::changeKey( char oldKey, char newKey )
 
 bool Inventory::changeKey( Item* item, char newKey )
 {
-    char oldKey = key( item );
-    if( oldKey ==  NO_KEY)
-        return false;
-
-    return addItem( removeItem( oldKey ), newKey );
+    return changeKey( key( item ), newKey );
 }
 
 

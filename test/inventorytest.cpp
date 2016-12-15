@@ -179,4 +179,71 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
         inventory.addItem( &macGuffin );
         CHECK( inventory.size() == 3u );
     }
+
+    SECTION( "changing keys" )
+    {
+        CHECK( inventory[ 'a' ] == &slimeMold );
+        CHECK( inventory[ 'b' ] == &fluxCapacitor );
+        CHECK( inventory[ 'c' ] == &macGuffin );
+
+        SECTION( "by key" )
+        {
+            SECTION( "swapping" )
+            {
+                CHECK( inventory.changeKey( 'a', 'c' ) );
+
+                CHECK( inventory[ 'c' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'a' ] == &macGuffin );
+            }
+
+            SECTION( "unused key" )
+            {
+                CHECK( inventory.changeKey( 'a', 'Q' ) );
+
+                CHECK( inventory[ 'Q' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'c' ] == &macGuffin );
+            }
+
+            SECTION( "illegal key" )
+            {
+                CHECK_FALSE( inventory.changeKey( 'a', '!' ) );
+
+                CHECK( inventory[ 'a' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'c' ] == &macGuffin );
+            }
+        }
+
+        SECTION( "by Item*" )
+        {
+            SECTION( "swapping" )
+            {
+                CHECK( inventory.changeKey( &slimeMold, 'c' ) );
+
+                CHECK( inventory[ 'c' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'a' ] == &macGuffin );
+            }
+
+            SECTION( "unused key" )
+            {
+                CHECK( inventory.changeKey( &slimeMold, 'X' ) );
+
+                CHECK( inventory[ 'X' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'c' ] == &macGuffin );
+            }
+
+            SECTION( "illegal key" )
+            {
+                CHECK_FALSE( inventory.changeKey( &slimeMold, '*' ) );
+
+                CHECK( inventory[ 'a' ] == &slimeMold );
+                CHECK( inventory[ 'b' ] == &fluxCapacitor );
+                CHECK( inventory[ 'c' ] == &macGuffin );
+            }
+        }
+    }
 }
