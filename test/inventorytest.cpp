@@ -6,49 +6,177 @@
 #include "../src/tile.h"
 #include "../src/item.h"
 
-std::string testLegalSymbolsString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-auto testLegalSymbolsVector = std::vector<char>(
-        testLegalSymbolsString.cbegin(),
-        testLegalSymbolsString.cend() );
+std::string legalSymbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+auto legalSymbolsVector = std::vector<char>(
+        legalSymbols.cbegin(),
+        legalSymbols.cend() );
 
-TEST_CASE( "Inventory is constructed", "[InventoryConstructor]" )
+TEST_CASE( "Inventory constructor", "[Inventory]" )
 {
-    SECTION( "Legal symbols are as expected" )
-    {
-        Inventory vectorInventory( testLegalSymbolsString );
-        Inventory stringInventory( testLegalSymbolsVector );
 
-        REQUIRE( vectorInventory.legalSymbols() == testLegalSymbolsVector );
-        REQUIRE( stringInventory.legalSymbols() == testLegalSymbolsVector );
+    SECTION( "string" )
+    {
+        Inventory* inventory_ptr;
+        REQUIRE_NOTHROW( inventory_ptr = new Inventory( legalSymbols ) );
+        Inventory& inventory = *inventory_ptr;
+
+        auto testKey = legalSymbols.cbegin();
+        auto objectKey = inventory.legalSymbols().cbegin();
+
+        while(
+                testKey != legalSymbols.cend() &&
+                objectKey != inventory.legalSymbols().cend() )
+        {
+            CHECK( *testKey++ == *objectKey++ );
+        }
+    }
+
+    SECTION( "string alternate" )
+    {
+        std::string testString = "!@#$%^&*~12aqwuxjz";
+        Inventory* inventory_ptr;
+        REQUIRE_NOTHROW( inventory_ptr = new Inventory( testString ) );
+        Inventory& inventory = *inventory_ptr;
+
+        auto testKey = testString.cbegin();
+        auto objectKey = inventory.legalSymbols().cbegin();
+
+        while(
+                testKey != testString.cend() &&
+                objectKey != inventory.legalSymbols().cend() )
+        {
+            CHECK( *testKey++ == *objectKey++ );
+        }
+    }
+
+    SECTION( "vector" )
+    {
+        Inventory* inventory_ptr;
+        REQUIRE_NOTHROW( inventory_ptr = new Inventory( legalSymbolsVector ) );
+        Inventory& inventory = *inventory_ptr;
+
+        auto testKey = legalSymbolsVector.cbegin();
+        auto objectKey = inventory.legalSymbols().cbegin();
+
+        while(
+                testKey != legalSymbols.cend() &&
+                objectKey != inventory.legalSymbols().cend() )
+        {
+            CHECK( *testKey++ == *objectKey++ );
+        }
     }
 }
 
-TEST_CASE( "Inventory::viewItems works as expected", "[InventoryViewItems]" )
+TEST_CASE( "adding and removing items", "[Inventory]" )
 {
-    Inventory inventory( testLegalSymbolsString );
-    std::set<Item*> items;
+    Inventory inventory( legalSymbols );
 
     Item slimeMold( "Slime mold", "a delicious, nutritious dungeon staple" );
     Item fluxCapacitor( "Flux capacitor", "the key to the secrets of the universe" );
     Item macGuffin( "MacGuffin", "a mysterious golden glow emanates from this briefcase" );
 
-    items.insert( &slimeMold );
-    items.insert( &fluxCapacitor );
-    items.insert( &macGuffin );
+    char slimeKey, fluxKey, macKey;
 
-    std::map<char, Item*> itemView = inventory.viewItems( items.begin(), items.end() );
+    CHECK_NOTHROW( slimeKey = inventory.addItem( &slimeMold ) );
+    CHECK_NOTHROW( fluxKey = inventory.addItem( &fluxCapacitor ) );
+    CHECK_NOTHROW( macKey = inventory.addItem( &macGuffin ) );
 
-    SECTION( "appropriate number of items are in viewItems map" )
+    SECTION( "adding items" )
     {
-        REQUIRE( itemView.size() == items.size() );
+        SECTION( "addItem returns appropriate key" )
+        {
+            auto key = legalSymbols.cbegin();
+
+            CHECK( slimeKey == *key++ );
+            CHECK( inventory[ slimeKey ] == &slimeMold );
+
+            CHECK( fluxKey == *key++ );
+            CHECK( inventory[ fluxKey ] == &fluxCapacitor );
+
+            CHECK( macKey == *key );
+            CHECK( inventory[ macKey ] == &macGuffin );
+        }
+
+        Item masterSword(
+                "Master sword",
+                "a famous blade that can be wielded only by those with great courage" );
+
+        char swordKey, actualKey;
+
+        SECTION( "addItem with appropriate key" )
+        {
+            swordKey = 'Z';
+            REQUIRE_NOTHROW( actualKey = inventory.addItem( &masterSword, swordKey ) );
+            CAPTURE( swordKey );
+            CAPTURE( actualKey );
+
+            CHECK( swordKey == actualKey );
+            CHECK( inventory[ swordKey ] == &masterSword );
+            CHECK( inventory[ actualKey ] == &masterSword );
+        }
+
+        SECTION( "addItem with already used key" )
+        {
+            swordKey = 'a';
+            REQUIRE_NOTHROW( actualKey = inventory.addItem( &masterSword, swordKey ) );
+            CAPTURE( swordKey );
+            CAPTURE( actualKey );
+
+            CHECK( swordKey != actualKey );
+            CHECK( inventory[ swordKey ] != &masterSword );
+            CHECK( inventory[ actualKey ] == &masterSword );
+        }
+
+        SECTION( "addItem with illegal key" )
+        {
+            swordKey = '#';
+            REQUIRE_NOTHROW( actualKey = inventory.addItem( &masterSword, swordKey ) );
+            CAPTURE( swordKey );
+            CAPTURE( actualKey );
+
+            CHECK( swordKey != actualKey );
+            CHECK( inventory[ swordKey ] != &masterSword );
+            CHECK( inventory[ actualKey ] == &masterSword );
+        }
     }
 
-    SECTION( "items in viewItems map have appropriate keys" )
+    SECTION( "removing items" )
     {
-        auto setItem = items.cbegin();
+        SECTION( "removing items by pointer" )
+        {
+            CHECK_NOTHROW( inventory.removeItem( &slimeMold ) );
+            CHECK_NOTHROW( inventory.removeItem( &fluxCapacitor ) );
+            CHECK_NOTHROW( inventory.removeItem( &macGuffin ) );
+        }
 
-        REQUIRE( itemView['a'] == *setItem++ );
-        REQUIRE( itemView['b'] == *setItem++ );
-        REQUIRE( itemView['c'] == *setItem );
+        SECTION( "removing items by key" )
+        {
+            CHECK_NOTHROW( inventory.removeItem( slimeKey ) );
+            CHECK_NOTHROW( inventory.removeItem( fluxKey ) );
+            CHECK_NOTHROW( inventory.removeItem( macKey ) );
+        }
+    }
+
+    SECTION( "size" )
+    {
+        CHECK( inventory.size() == 3u );
+
+        inventory.removeItem( slimeKey );
+        CHECK( inventory.size() == 2u );
+
+        inventory.removeItem( &fluxCapacitor );
+        CHECK( inventory.size() == 1u );
+
+        inventory.removeItem( macKey );
+        CHECK( inventory.size() == 0u );
+
+        inventory.addItem( &slimeMold );
+        CHECK( inventory.size() == 1u );
+
+        inventory.addItem( &fluxCapacitor );
+        CHECK( inventory.size() == 2u );
+
+        inventory.addItem( &macGuffin );
+        CHECK( inventory.size() == 3u );
     }
 }
