@@ -5,14 +5,16 @@
 #include <stdexcept>
 
 Inventory::Inventory( std::vector<char> keyOrder ) :
-    m_keyOrder( generateKeyCompare( keyOrder ) ),
-    m_keySet( keyOrder.cbegin(), keyOrder.cend(), m_keyOrder ),
-    m_unusedSymbols( keyOrder.cbegin(), keyOrder.cend(), m_keyOrder ){}
+    m_keyCompare( generateKeyCompare( keyOrder ) ),
+    m_sortCompare( defaultSortCompare( m_keyCompare ) ),
+    m_keySet( keyOrder.cbegin(), keyOrder.cend(), m_keyCompare ),
+    m_unusedSymbols( keyOrder.cbegin(), keyOrder.cend(), m_keyCompare ){}
 
 Inventory::Inventory( std::string keyOrder ) :
-    m_keyOrder( generateKeyCompare( keyOrder ) ),
-    m_keySet( keyOrder.cbegin(), keyOrder.cend(), m_keyOrder ),
-    m_unusedSymbols( keyOrder.cbegin(), keyOrder.cend(), m_keyOrder ){}
+    m_keyCompare( generateKeyCompare( keyOrder ) ),
+    m_sortCompare( defaultSortCompare( m_keyCompare ) ),
+    m_keySet( keyOrder.cbegin(), keyOrder.cend(), m_keyCompare ),
+    m_unusedSymbols( keyOrder.cbegin(), keyOrder.cend(), m_keyCompare ){}
 
 const Item* Inventory::operator[]( char key ) const
 {
@@ -20,6 +22,24 @@ const Item* Inventory::operator[]( char key ) const
         return NULL;
 
     return m_items.at( key );
+}
+
+const Item* Inventory::operator[]( int index ) const
+{
+    if( index >= m_sorted.size() )
+        return NULL;
+
+    int i = 0;
+
+    for( auto sortedPair : m_sorted )
+    {
+        if( i++ == index )
+        {
+            return sortedPair.second;
+        }
+    }
+
+    return NULL;
 }
 
 bool Inventory::hasItem( Item* item )
@@ -129,6 +149,22 @@ const InventoryKeyCompare Inventory::generateKeyCompare( std::vector<char> keyOr
     {
         compare.keyOrder[ key ] = compare.keyOrder.size();
     }
+
+    return compare;
+}
+
+const InventorySortCompare Inventory::defaultSortCompare( InventoryKeyCompare keyCompare )
+{
+    InventorySortCompare compare;
+    compare.keyCompare = keyCompare;
+
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Weapon, 0 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Equipment, 1 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Tool, 2 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Consumable, 3 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Craftable, 4 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::Quest, 5 ) );
+    compare.itemGroupOrder.insert( std::pair< Item::Group, int >( Item::Group::None, 6 ) );
 
     return compare;
 }

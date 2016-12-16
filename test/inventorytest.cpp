@@ -72,10 +72,20 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
     Inventory inventory( legalSymbols );
 
     Item slimeMold( "Slime mold", "a delicious, nutritious dungeon staple" );
-    Item fluxCapacitor( "Flux capacitor", "the key to the secrets of the universe" );
-    Item macGuffin( "MacGuffin", "a mysterious golden glow emanates from this briefcase" );
+    slimeMold.group( Item::Group::Consumable );
 
-    char slimeKey, fluxKey, macKey;
+    Item fluxCapacitor( "Flux capacitor", "the key to the secrets of the universe" );
+    fluxCapacitor.group( Item::Group::Craftable );
+
+    Item macGuffin( "MacGuffin", "a mysterious golden glow emanates from this briefcase" );
+    macGuffin.group( Item::Group::Quest );
+
+    Item masterSword(
+            "Master sword",
+            "a famous blade that can be wielded only by those with great courage" );
+    masterSword.group( Item::Group::Weapon );
+
+    char slimeKey, fluxKey, macKey, swordKey;
 
     CHECK_NOTHROW( slimeKey = inventory.addItem( &slimeMold ) );
     CHECK_NOTHROW( fluxKey = inventory.addItem( &fluxCapacitor ) );
@@ -97,11 +107,7 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
             CHECK( inventory[ macKey ] == &macGuffin );
         }
 
-        Item masterSword(
-                "Master sword",
-                "a famous blade that can be wielded only by those with great courage" );
-
-        char swordKey, actualKey;
+        char actualKey;
 
         SECTION( "addItem with appropriate key" )
         {
@@ -244,6 +250,24 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'c' ] == &macGuffin );
             }
+        }
+    }
+
+    SECTION( "sorted items" )
+    {
+        std::vector< Item* > expectedOrder;
+        expectedOrder.push_back( &masterSword );
+        expectedOrder.push_back( &slimeMold );
+        expectedOrder.push_back( &fluxCapacitor );
+        expectedOrder.push_back( &macGuffin );
+
+        REQUIRE( expectedOrder.size() == inventory.sorted().size() );
+
+        auto expectedItem = expectedOrder.cbegin();
+        for( auto sortedPair : inventory.sorted() )
+        {
+            CAPTURE( sortedPair.second );
+            CHECK( sortedPair.second == *expectedItem++ );
         }
     }
 }
