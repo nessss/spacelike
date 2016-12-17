@@ -21,7 +21,11 @@ class Item : public OnscreenElement, public NamedElement{
             Quest
         };
 
-        Item( string name="", string description="" );
+        Item(   string name = "",
+                string description = "",
+                Item::Group group = Item::Group::None,
+                int weight = 0,
+                int value = 0 );
 
         string name(){ return m_name; }
         string name( string name ){ m_name = name; return m_name; }
@@ -29,11 +33,14 @@ class Item : public OnscreenElement, public NamedElement{
         string description(){ return m_description; }
         string description( string desc ){ m_description = desc; return m_description; }
 
+        Group group(){ return m_group; }
+        Group group( Group newGroup ){ m_group = newGroup; return m_group; }
+
         int weight(){ return m_weight; }
         int weight( int weight ){ m_weight = weight; return m_weight; }
 
-        Group group(){ return m_group; }
-        Group group( Group newGroup ){ m_group = newGroup; return m_group; }
+        int value(){ return m_value; }
+        int value( int value ){ m_value = value; return m_value; }
 
         bool visible();
         bool known();
@@ -42,8 +49,9 @@ class Item : public OnscreenElement, public NamedElement{
     private:
         string m_name;
         string m_description;
-        int m_weight;
         Group m_group;
+        int m_weight;
+        int m_value;
 };
 
 #endif /* ifndef ITEM_H */
