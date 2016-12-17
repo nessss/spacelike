@@ -71,7 +71,11 @@ char Inventory::addItem( Item* item, char itemKey )
         key = *( m_unusedSymbols.begin() );
     }
 
-    m_items.insert( std::pair<char, Item*>( key, item ) );
+    auto kvPair = std::pair<char, Item*>( key, item );
+
+    m_items.insert( kvPair );
+    m_sorted.push_front( kvPair );
+    m_sorted.sort( m_sortCompare );
 
     m_unusedSymbols.erase( key );
 
@@ -90,8 +94,12 @@ Item* Inventory::removeItem( char removalKey )
     try
     {
         Item* item = m_items.at( removalKey );
+
         m_items.erase( removalKey );
+        m_sorted.remove( std::pair< char, Item* >( removalKey, item ) );
+
         m_unusedSymbols.insert( removalKey );
+
         return item;
     }
     catch( std::out_of_range )

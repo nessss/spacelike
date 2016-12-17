@@ -11,6 +11,7 @@
 #include <map>
 #include <cctype>
 #include <stdexcept>
+#include <iostream>
 #include "item.h"
 #include "zone.h"
 
@@ -45,7 +46,7 @@ struct InventorySortCompare
             const std::pair< char, Item* >& lhs,
             const std::pair< char, Item* >& rhs ) const
     {
-        bool lhsGroupIndex, rhsGroupIndex;
+        int lhsGroupIndex, rhsGroupIndex;
         try
         {
             lhsGroupIndex = itemGroupOrder.at( lhs.second->group() );
@@ -57,10 +58,7 @@ struct InventorySortCompare
             }
             else
             {
-                if( lhsGroupIndex < rhsGroupIndex )
-                    return true;
-
-                return false;
+                return ( lhsGroupIndex < rhsGroupIndex );
             }
         }
 
@@ -99,6 +97,21 @@ class Inventory{
         char key( Item* item );
 
         char addItem( Item* item, char itemKey='\0' );
+
+        template <typename Iterator>
+        std::vector< char > addItems( Iterator begin, Iterator end )
+        {
+            std::vector< char > result;
+
+            Iterator item = begin;
+            while( item != end )
+            {
+                result.push_back( addItem( *item++ ) );
+            }
+
+            return result;
+        }
+
         Item* removeItem( Item* item );
         Item* removeItem( char key );
 

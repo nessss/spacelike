@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <array>
 #include "catch.hpp"
 #include "../src/inventory.h"
 #include "../src/tile.h"
@@ -71,28 +72,69 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
 {
     Inventory inventory( legalSymbols );
 
-    Item slimeMold( "Slime mold", "a delicious, nutritious dungeon staple" );
-    slimeMold.group( Item::Group::Consumable );
+    Item slimeMold(
+            "Slime mold",
+            "a delicious, nutritious dungeon staple",
+            Item::Group::Consumable );
 
-    Item fluxCapacitor( "Flux capacitor", "the key to the secrets of the universe" );
-    fluxCapacitor.group( Item::Group::Craftable );
 
-    Item macGuffin( "MacGuffin", "a mysterious golden glow emanates from this briefcase" );
-    macGuffin.group( Item::Group::Quest );
+    Item fluxCapacitor( "Flux capacitor",
+		    "the key to the secrets of the universe",
+		    Item::Group::Craftable );
+
+    Item macGuffin( "MacGuffin",
+		    "a mysterious golden glow emanates from this briefcase",
+		    Item::Group::Quest );
 
     Item masterSword(
             "Master sword",
-            "a famous blade that can be wielded only by those with great courage" );
-    masterSword.group( Item::Group::Weapon );
+            "a famous blade that can be wielded only by those with great courage",
+            Item::Group::Weapon );
 
-    char slimeKey, fluxKey, macKey, swordKey;
+    Item exosuit(
+            "Exosuit",
+            "Powered armor and weapons platform",
+            Item::Group::Equipment );
 
-    CHECK_NOTHROW( slimeKey = inventory.addItem( &slimeMold ) );
-    CHECK_NOTHROW( fluxKey = inventory.addItem( &fluxCapacitor ) );
-    CHECK_NOTHROW( macKey = inventory.addItem( &macGuffin ) );
+
+    std::array< Item*, 5 > testItems
+    { {
+        &slimeMold,
+        &fluxCapacitor,
+        &macGuffin,
+        &masterSword,
+        &exosuit
+    } };
+
+    char slimeKey, fluxKey, macKey, swordKey, exoKey;
+
+    std::array< char*, 5 > testKeys
+    { {
+        &slimeKey,
+        &fluxKey,
+        &macKey,
+        &swordKey,
+        &exoKey
+    } };
 
     SECTION( "adding items" )
     {
+        SECTION( "add range of items" )
+        {
+            std::vector< char >* keys;
+            CHECK_NOTHROW(
+                    keys = new std::vector< char > (
+                        inventory.addItems( testItems.cbegin(), testItems.cend() ) ) );
+        }
+
+        auto key = testKeys.begin();
+
+        for( auto item : testItems )
+        {
+            CHECK_NOTHROW( **key++ = inventory.addItem( item ) );
+        }
+
+
         SECTION( "addItem returns appropriate key" )
         {
             auto key = legalSymbols.cbegin();
@@ -165,15 +207,28 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
 
     SECTION( "size" )
     {
-        CHECK( inventory.size() == 3u );
+        auto key = testKeys.begin();
+
+        for( auto item : testItems )
+        {
+            REQUIRE_NOTHROW( **key++ = inventory.addItem( item ) );
+        }
+
+        CHECK( inventory.size() == 5u );
 
         inventory.removeItem( slimeKey );
-        CHECK( inventory.size() == 2u );
+        CHECK( inventory.size() == 4u );
 
         inventory.removeItem( &fluxCapacitor );
-        CHECK( inventory.size() == 1u );
+        CHECK( inventory.size() == 3u );
 
         inventory.removeItem( macKey );
+        CHECK( inventory.size() == 2u );
+
+        inventory.removeItem( swordKey );
+        CHECK( inventory.size() == 1u );
+
+        inventory.removeItem( exoKey );
         CHECK( inventory.size() == 0u );
 
         inventory.addItem( &slimeMold );
@@ -184,13 +239,27 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
 
         inventory.addItem( &macGuffin );
         CHECK( inventory.size() == 3u );
+
+        inventory.addItem( &masterSword );
+        CHECK( inventory.size() == 4u );
+
+        inventory.addItem( &masterSword );
+        CHECK( inventory.size() == 5u );
     }
 
     SECTION( "changing keys" )
     {
+        auto key = testKeys.begin();
+        for( auto item : testItems )
+        {
+            REQUIRE_NOTHROW( **key = inventory.addItem( item ) );
+        }
+
         CHECK( inventory[ 'a' ] == &slimeMold );
         CHECK( inventory[ 'b' ] == &fluxCapacitor );
         CHECK( inventory[ 'c' ] == &macGuffin );
+        CHECK( inventory[ 'd' ] == &masterSword );
+        CHECK( inventory[ 'e' ] == &exosuit );
 
         SECTION( "by key" )
         {
@@ -201,6 +270,8 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'c' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'a' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
 
             SECTION( "unused key" )
@@ -210,6 +281,8 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'Q' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'c' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
 
             SECTION( "illegal key" )
@@ -219,6 +292,8 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'a' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'c' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
         }
 
@@ -231,6 +306,8 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'c' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'a' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
 
             SECTION( "unused key" )
@@ -240,6 +317,8 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'X' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'c' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
 
             SECTION( "illegal key" )
@@ -249,14 +328,24 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
                 CHECK( inventory[ 'a' ] == &slimeMold );
                 CHECK( inventory[ 'b' ] == &fluxCapacitor );
                 CHECK( inventory[ 'c' ] == &macGuffin );
+                CHECK( inventory[ 'd' ] == &masterSword );
+                CHECK( inventory[ 'e' ] == &exosuit );
             }
         }
     }
 
     SECTION( "sorted items" )
     {
+        auto key = testKeys.begin();
+        for( auto item : testItems )
+        {
+            REQUIRE_NOTHROW( **key = inventory.addItem( item ) );
+        }
+
         std::vector< Item* > expectedOrder;
+
         expectedOrder.push_back( &masterSword );
+        expectedOrder.push_back( &exosuit );
         expectedOrder.push_back( &slimeMold );
         expectedOrder.push_back( &fluxCapacitor );
         expectedOrder.push_back( &macGuffin );
@@ -264,10 +353,15 @@ TEST_CASE( "adding and removing items", "[Inventory]" )
         REQUIRE( expectedOrder.size() == inventory.sorted().size() );
 
         auto expectedItem = expectedOrder.cbegin();
-        for( auto sortedPair : inventory.sorted() )
+        auto sortedPair = inventory.sorted().cbegin();
+        do
         {
-            CAPTURE( sortedPair.second );
-            CHECK( sortedPair.second == *expectedItem++ );
+            CAPTURE( sortedPair->second->name() );
+            CAPTURE( ( *expectedItem )->name() );
+
+            CHECK( sortedPair->second->name() == ( *expectedItem )->name() );
         }
+        while(  ++expectedItem != expectedOrder.cend() &&
+                ++sortedPair != inventory.sorted().cend()  );
     }
 }
