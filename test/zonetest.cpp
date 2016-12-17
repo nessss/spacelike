@@ -20,6 +20,10 @@ TEST_CASE( "Zone is constructed", "[ZoneConstructor]" ) {
         REQUIRE( zone.tile(1, 1)->blocksMovement() == false );
     }
 
+}
+
+TEST_CASE( "extreme Zone constructor", "[.slow]" )
+{
     SECTION( "Large sizes of Zone are constructed quickly" ) {
         Zone zone(4096, 4096);
     }
